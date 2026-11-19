@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <meta name="theme-color" content="#222222">
     <meta name="apple-mobile-web-app-capable" content="yes">
-    <title>XIMART — Smart Food & Wallet System</title>
+    <title>XIMART V3 — Dana Sarapan & Dana Dagangan QRIS</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -14,29 +14,31 @@
     <style>
         :root {
             --bg-base: #222222;
-            --glass-surface: rgba(255, 255, 255, 0.07);
-            --glass-surface-hover: rgba(255, 255, 255, 0.12);
+            --glass-surface: rgba(255, 255, 255, 0.065);
+            --glass-surface-active: rgba(255, 255, 255, 0.14);
+            --glass-surface-hover: rgba(255, 255, 255, 0.11);
             --glass-border: rgba(255, 255, 255, 0.12);
-            --glass-border-active: rgba(137, 233, 0, 0.5);
+            --glass-border-active: rgba(137, 233, 0, 0.55);
 
             --accent-neon: #89E900;
             --accent-neon-soft: rgba(137, 233, 0, 0.14);
             --accent-neon-glow: 0 0 18px rgba(137, 233, 0, 0.35);
             --text-primary: #FDFDF2;
-            --text-secondary: #A0A0A0;
+            --text-secondary: #A4A4A4;
 
             --status-danger: #ff4d4d;
             --status-danger-bg: rgba(255, 77, 77, 0.15);
             --status-warn: #fbbf24;
             --status-warn-bg: rgba(251, 191, 36, 0.15);
+            --status-ok: #89E900;
 
-            --radius-xl: 20px;
-            --radius-lg: 16px;
-            --radius-md: 12px;
-            --radius-sm: 8px;
-            --shadow-glass: 0 8px 32px 0 rgba(0, 0, 0, 0.45);
+            --radius-xl: 22px;
+            --radius-lg: 18px;
+            --radius-md: 14px;
+            --radius-sm: 10px;
+            --shadow-floating: 0 12px 32px rgba(0, 0, 0, 0.52);
             --transition-morph: all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
-            --transition-smooth: all 0.25s ease;
+            --transition-smooth: all 0.22s ease;
         }
 
         * {
@@ -49,37 +51,40 @@
 
         body {
             background-color: var(--bg-base);
-            background-image: 
-                radial-gradient(circle at 12% 8%, rgba(137, 233, 0, 0.09) 0%, transparent 45%),
-                radial-gradient(circle at 88% 88%, rgba(137, 233, 0, 0.06) 0%, transparent 45%);
+            background-image:
+                radial-gradient(circle at 15% 6%, rgba(137, 233, 0, 0.09) 0%, transparent 45%),
+                radial-gradient(circle at 88% 90%, rgba(137, 233, 0, 0.06) 0%, transparent 45%);
             color: var(--text-primary);
             min-height: 100vh;
             display: flex;
             flex-direction: column;
             align-items: center;
-            padding-bottom: 96px;
+            padding-bottom: 108px;
             overflow-x: hidden;
         }
 
-        /* Header */
+        /* Floating Glass Header */
         .app-header {
-            width: 100%;
-            max-width: 480px;
-            padding: 14px 20px;
+            width: calc(100% - 24px);
+            max-width: 468px;
+            margin-top: 12px;
+            padding: 12px 16px;
             display: flex;
             justify-content: space-between;
             align-items: center;
             position: sticky;
-            top: 0;
-            background: rgba(34, 34, 34, 0.82);
-            backdrop-filter: blur(18px);
-            -webkit-backdrop-filter: blur(18px);
+            top: 12px;
+            background: rgba(34, 34, 34, 0.78);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
             z-index: 100;
-            border-bottom: 1px solid var(--glass-border);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-floating);
         }
 
         .brand-title {
-            font-size: 1.15rem;
+            font-size: 1.08rem;
             font-weight: 700;
             display: flex;
             align-items: center;
@@ -89,39 +94,77 @@
         .brand-badge {
             background: var(--accent-neon-soft);
             color: var(--accent-neon);
-            font-size: 0.65rem;
+            font-size: 0.64rem;
             padding: 3px 9px;
             border-radius: 999px;
             border: 1px solid var(--glass-border-active);
             font-weight: 700;
+            max-width: 150px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
         }
 
         .container {
             width: 100%;
             max-width: 480px;
-            padding: 16px;
+            padding: 14px 14px 12px 14px;
             display: flex;
             flex-direction: column;
             gap: 14px;
-            animation: pageEnter 0.32s cubic-bezier(0.22, 1, 0.36, 1);
+            animation: pageEnter 0.3s cubic-bezier(0.22, 1, 0.36, 1);
         }
 
-        /* Glass Card & Morph Interaction */
+        /* Floating Glass Mode Switcher (Dana Sarapan vs Dana Dagangan QRIS) */
+        .jalur-switcher {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid var(--glass-border);
+            padding: 6px;
+            border-radius: var(--radius-lg);
+            backdrop-filter: blur(16px);
+            box-shadow: var(--shadow-floating);
+        }
+
+        .jalur-btn {
+            padding: 10px 12px;
+            border-radius: var(--radius-md);
+            border: 1px solid transparent;
+            background: transparent;
+            color: var(--text-secondary);
+            font-size: 0.78rem;
+            font-weight: 700;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            transition: var(--transition-morph);
+        }
+
+        .jalur-btn.active {
+            background: var(--glass-surface-active);
+            color: var(--accent-neon);
+            border-color: var(--glass-border-active);
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.35);
+        }
+
+        .jalur-btn:active {
+            transform: scale(0.96);
+        }
+
+        /* Glass Card */
         .card {
             background: var(--glass-surface);
             border: 1px solid var(--glass-border);
             border-radius: var(--radius-xl);
-            padding: 18px;
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
-            box-shadow: var(--shadow-glass);
+            padding: 16px;
+            backdrop-filter: blur(18px);
+            -webkit-backdrop-filter: blur(18px);
+            box-shadow: var(--shadow-floating);
             transition: var(--transition-smooth);
-        }
-
-        .card:hover {
-            transform: translateY(-2px);
-            border-color: rgba(255, 255, 255, 0.2);
-            box-shadow: 0 12px 36px rgba(0, 0, 0, 0.55);
         }
 
         .wallet-card {
@@ -136,16 +179,20 @@
             margin-bottom: 12px;
         }
 
-        .section-title { font-size: 0.95rem; font-weight: 600; color: var(--text-primary); }
+        .section-title {
+            font-size: 0.94rem;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
 
-        /* Morph Buttons */
+        /* Buttons */
         .btn-primary {
             width: 100%;
             background: var(--accent-neon);
             color: #161616;
             font-weight: 700;
-            font-size: 0.92rem;
-            padding: 13px 16px;
+            font-size: 0.88rem;
+            padding: 12px 16px;
             border: none;
             border-radius: var(--radius-md);
             cursor: pointer;
@@ -154,33 +201,33 @@
         }
 
         .btn-primary:hover { filter: brightness(1.06); }
-        .btn-primary:active { transform: scale(0.95); }
+        .btn-primary:active { transform: scale(0.96); }
 
         .btn-secondary {
             background: var(--glass-surface);
             color: var(--text-primary);
             border: 1px solid var(--glass-border);
-            padding: 8px 13px;
+            padding: 8px 12px;
             border-radius: var(--radius-md);
-            font-size: 0.75rem;
+            font-size: 0.74rem;
             font-weight: 600;
             cursor: pointer;
             transition: var(--transition-morph);
         }
 
-        .btn-secondary:hover { background: var(--glass-surface-hover); border-color: rgba(255,255,255,0.25); }
+        .btn-secondary:hover { background: var(--glass-surface-hover); border-color: rgba(255,255,255,0.24); }
         .btn-secondary:active { transform: scale(0.94); }
 
         /* Inputs */
-        .input-group { display: flex; flex-direction: column; gap: 5px; margin-bottom: 12px; }
-        .input-group label { font-size: 0.75rem; color: var(--text-secondary); }
+        .input-group { display: flex; flex-direction: column; gap: 5px; margin-bottom: 11px; }
+        .input-group label { font-size: 0.73rem; color: var(--text-secondary); }
         .input-control {
-            background: rgba(0, 0, 0, 0.32);
+            background: rgba(0, 0, 0, 0.34);
             border: 1px solid var(--glass-border);
             color: var(--text-primary);
-            padding: 11px 13px;
+            padding: 10px 13px;
             border-radius: var(--radius-md);
-            font-size: 0.88rem;
+            font-size: 0.86rem;
             outline: none;
             width: 100%;
             transition: var(--transition-smooth);
@@ -190,59 +237,79 @@
             box-shadow: 0 0 0 3px rgba(137, 233, 0, 0.16);
         }
 
-        /* Menu Items */
-        .menu-grid { display: flex; flex-direction: column; gap: 10px; }
-        .menu-item-card {
-            background: rgba(255, 255, 255, 0.04);
-            border: 1px solid var(--glass-border);
-            border-radius: var(--radius-md);
-            padding: 12px 14px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            transition: var(--transition-smooth);
-        }
-        .menu-item-card.selected {
-            background: var(--accent-neon-soft);
-            border-color: var(--glass-border-active);
-        }
-        .menu-item-card.unavailable {
-            opacity: 0.48;
-        }
-
-        .qty-controls {
-            display: flex;
-            align-items: center;
+        /* Item / Menu Grid */
+        .item-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
             gap: 10px;
-            background: rgba(0, 0, 0, 0.35);
-            padding: 4px 10px;
-            border-radius: 999px;
-            border: 1px solid var(--glass-border);
         }
-        .qty-btn {
-            background: none; border: none; color: var(--accent-neon);
-            font-weight: 700; font-size: 1.15rem; width: 24px; height: 24px;
-            border-radius: 50%; cursor: pointer; transition: var(--transition-morph);
-        }
-        .qty-btn:active { transform: scale(0.82); background: var(--accent-neon-soft); }
 
-        /* Custom Order Box (Tambahan Menu Pesanan Bebas) */
-        .custom-order-box {
-            background: rgba(137, 233, 0, 0.05);
+        .item-tile {
+            background: rgba(255, 255, 255, 0.045);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius-lg);
+            padding: 13px;
+            cursor: pointer;
+            text-align: left;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            gap: 6px;
+            transition: var(--transition-morph);
+        }
+
+        .item-tile:hover {
+            border-color: var(--glass-border-active);
+            background: var(--glass-surface-active);
+            transform: translateY(-2px);
+        }
+
+        .item-tile:active { transform: scale(0.96); }
+
+        .item-tile.unavailable {
+            opacity: 0.45;
+            pointer-events: none;
+        }
+
+        .add-custom-tile {
+            background: rgba(137, 233, 0, 0.06);
             border: 1px dashed var(--glass-border-active);
             border-radius: var(--radius-lg);
-            padding: 14px;
+            padding: 13px;
+            cursor: pointer;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 4px;
+            color: var(--accent-neon);
+            font-weight: 700;
+            font-size: 0.8rem;
+            transition: var(--transition-morph);
         }
 
-        /* Skeleton Shimmer (#222222 & #89E900) */
-        .skeleton-card {
-            height: 64px;
+        .add-custom-tile:hover { background: var(--accent-neon-soft); }
+        .add-custom-tile:active { transform: scale(0.96); }
+
+        /* Cart & Unpaid List Cards */
+        .sub-box {
+            background: rgba(0, 0, 0, 0.25);
+            border: 1px solid var(--glass-border);
             border-radius: var(--radius-md);
-            background: linear-gradient(90deg, #222222 25%, rgba(137, 233, 0, 0.16) 50%, #222222 75%);
+            padding: 11px 12px;
+            margin-bottom: 9px;
+        }
+
+        /* Skeleton Loading */
+        .skeleton-card {
+            height: 62px;
+            border-radius: var(--radius-md);
+            background: linear-gradient(90deg, #222222 25%, rgba(137, 233, 0, 0.14) 50%, #222222 75%);
             background-size: 200% 100%;
             animation: shimmerAnim 1.4s infinite linear;
             border: 1px solid var(--glass-border);
-            margin-bottom: 10px;
+            margin-bottom: 8px;
         }
 
         @keyframes shimmerAnim {
@@ -250,80 +317,135 @@
             100% { background-position: -200% 0; }
         }
 
-        /* Bottom Navigation (5 Menu) */
+        /* Floating Bottom Navigation (Floating Glass Style) */
         .nav-bar {
-            position: fixed; bottom: 0; left: 0; right: 0;
-            background: rgba(34, 34, 34, 0.88);
-            backdrop-filter: blur(20px);
-            border-top: 1px solid var(--glass-border);
-            display: flex; justify-content: center; z-index: 95;
+            position: fixed;
+            bottom: 12px;
+            left: 0;
+            right: 0;
+            display: flex;
+            justify-content: center;
+            z-index: 95;
+            padding: 0 12px;
+            pointer-events: none;
         }
+
         .nav-container {
-            width: 100%; max-width: 480px;
-            display: grid; grid-template-columns: repeat(5, 1fr);
-            padding: 8px 4px;
+            width: 100%;
+            max-width: 468px;
+            background: rgba(36, 36, 36, 0.86);
+            backdrop-filter: blur(22px);
+            -webkit-backdrop-filter: blur(22px);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius-xl);
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            padding: 7px 4px;
+            box-shadow: var(--shadow-floating);
+            pointer-events: auto;
         }
+
         .nav-item {
-            display: flex; flex-direction: column; align-items: center; gap: 3px;
-            color: var(--text-secondary); font-size: 0.65rem; font-weight: 500;
-            background: none; border: none; cursor: pointer; padding: 4px 2px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 3px;
+            color: var(--text-secondary);
+            font-size: 0.64rem;
+            font-weight: 500;
+            background: transparent;
+            border: 1px solid transparent;
+            border-radius: var(--radius-md);
+            cursor: pointer;
+            padding: 6px 2px;
             transition: var(--transition-morph);
         }
-        .nav-item .nav-icon { font-size: 1.15rem; transition: transform 0.2s ease; }
-        .nav-item.active { color: var(--accent-neon); font-weight: 700; }
-        .nav-item.active .nav-icon {
-            transform: translateY(-2px) scale(1.12);
-            filter: drop-shadow(0 0 6px rgba(137, 233, 0, 0.6));
+
+        .nav-item .nav-icon { font-size: 1.08rem; transition: transform 0.2s ease; }
+
+        .nav-item.active {
+            color: var(--accent-neon);
+            font-weight: 700;
+            background: var(--glass-surface-active);
+            border-color: var(--glass-border-active);
         }
-        .nav-item:active { transform: scale(0.9); }
+
+        .nav-item.active .nav-icon {
+            transform: translateY(-1px) scale(1.08);
+            filter: drop-shadow(0 0 6px rgba(137, 233, 0, 0.55));
+        }
+
+        .nav-item:active { transform: scale(0.92); }
 
         /* Modals & Toast */
         .modal-overlay {
-            position: fixed; top: 0; left: 0; right: 0; bottom: 0;
-            background: rgba(15, 15, 15, 0.8); backdrop-filter: blur(10px);
-            display: flex; align-items: center; justify-content: center; padding: 20px;
-            z-index: 200; opacity: 0; pointer-events: none; transition: opacity 0.25s ease;
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(12, 12, 12, 0.78);
+            backdrop-filter: blur(12px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 18px;
+            z-index: 200;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.22s ease;
         }
+
         .modal-overlay.active { opacity: 1; pointer-events: auto; }
+
         .modal-body {
-            background: #282828; border: 1px solid var(--glass-border);
-            border-radius: var(--radius-xl); width: 100%; max-width: 400px; padding: 20px;
-            transform: scale(0.95); transition: var(--transition-morph);
+            background: rgba(40, 40, 40, 0.94);
+            border: 1px solid var(--glass-border-active);
+            border-radius: var(--radius-xl);
+            width: 100%;
+            max-width: 400px;
+            padding: 20px;
+            box-shadow: var(--shadow-floating);
+            transform: scale(0.94);
+            transition: var(--transition-morph);
         }
+
         .modal-overlay.active .modal-body { transform: scale(1); }
 
         .toast-notif {
-            position: fixed; top: 72px; left: 50%; transform: translateX(-50%) translateY(-20px);
-            background: #2a2a2a; border: 1px solid var(--accent-neon); color: var(--text-primary);
-            padding: 10px 18px; border-radius: 999px; font-size: 0.8rem; font-weight: 600;
-            box-shadow: var(--accent-neon-glow); z-index: 300; opacity: 0; pointer-events: none;
-            transition: all 0.3s ease;
+            position: fixed;
+            top: 76px;
+            left: 50%;
+            transform: translateX(-50%) translateY(-16px);
+            background: rgba(42, 42, 42, 0.96);
+            border: 1px solid var(--accent-neon);
+            color: var(--text-primary);
+            padding: 10px 18px;
+            border-radius: 999px;
+            font-size: 0.78rem;
+            font-weight: 600;
+            box-shadow: var(--accent-neon-glow);
+            z-index: 300;
+            opacity: 0;
+            pointer-events: none;
+            transition: all 0.28s ease;
+            max-width: 90%;
+            text-align: center;
         }
+
         .toast-notif.show { opacity: 1; transform: translateX(-50%) translateY(0); }
 
         .status-pill {
-            font-size: 0.68rem; font-weight: 700; padding: 3px 8px; border-radius: 999px;
+            font-size: 0.66rem;
+            font-weight: 700;
+            padding: 3px 8px;
+            border-radius: 999px;
+            white-space: nowrap;
         }
-        .status-PENDING { background: var(--status-warn-bg); color: var(--status-warn); }
-        .status-DITERIMA { background: rgba(56, 189, 248, 0.15); color: #38bdf8; }
-        .status-SELESAI { background: var(--accent-neon-soft); color: var(--accent-neon); }
-        .status-SOLD, .status-DIBATALKAN { background: var(--status-danger-bg); color: var(--status-danger); }
 
-        .category-tabs {
-            display: flex; gap: 6px; overflow-x: auto; padding-bottom: 6px; margin-bottom: 10px;
-        }
-        .cat-chip {
-            background: rgba(255,255,255,0.06); border: 1px solid var(--glass-border);
-            color: var(--text-secondary); padding: 5px 12px; border-radius: 999px;
-            font-size: 0.72rem; font-weight: 600; cursor: pointer; white-space: nowrap;
-            transition: var(--transition-morph);
-        }
-        .cat-chip.active {
-            background: var(--accent-neon); color: #161616; border-color: var(--accent-neon);
-        }
+        .status-BELUM\ DIBAYAR { background: var(--status-warn-bg); color: var(--status-warn); }
+        .status-DIBAYARKAN { background: var(--accent-neon-soft); color: var(--accent-neon); }
+        .status-TIDAK\ DIBAYARKAN { background: var(--status-danger-bg); color: var(--status-danger); }
 
         @keyframes pageEnter {
-            from { opacity: 0; transform: translateY(10px) scale(0.99); }
+            from { opacity: 0; transform: translateY(8px) scale(0.99); }
             to { opacity: 1; transform: translateY(0) scale(1); }
         }
     </style>
@@ -332,31 +454,41 @@
 
     <div class="toast-notif" id="toast-box">Notifikasi</div>
 
+    <!-- Floating Glass Header -->
     <header class="app-header">
         <div class="brand-title">
-            XIMART <span class="brand-badge" id="header-role-badge">GUEST</span>
+            XIMART <span class="brand-badge" id="header-role-badge">TAMU</span>
         </div>
-        <div style="display: flex; gap: 8px; align-items: center;">
-            <button class="btn-secondary" id="sound-toggle-btn" onclick="toggleSound()" title="Suara Morph UI">🔊</button>
+        <div style="display: flex; gap: 6px; align-items: center;">
+            <button class="btn-secondary" id="sound-toggle-btn" onclick="toggleSound()" title="Suara UI">🔊</button>
             <button class="btn-secondary" id="header-auth-btn" onclick="switchNav('profil')">Masuk</button>
         </div>
     </header>
 
-    <div class="container" id="app-container">
+    <div class="container">
+
+        <!-- Floating Mode Switcher: Dana Sarapan vs Dana Dagangan (QRIS) -->
+        <div class="jalur-switcher" id="jalur-switcher-box">
+            <button class="jalur-btn" id="btn-jalur-sarapan" onclick="selectJalur('SARAPAN')">
+                🍳 Dana Sarapan
+            </button>
+            <button class="jalur-btn active" id="btn-jalur-dagangan" onclick="selectJalur('DAGANGAN')">
+                💳 Dana Dagangan (QRIS)
+            </button>
+        </div>
 
         <!-- ==================== 1. AUTHENTICATION VIEW ==================== -->
         <div id="view-auth" style="display: none;">
             <div class="card">
                 <div class="section-header">
-                    <div class="section-title" id="auth-title">Masuk ke Akun XIMART</div>
-                    <span style="font-size: 0.72rem; color: var(--accent-neon);">Secure Access</span>
+                    <div class="section-title" id="auth-title">Masuk Akun User</div>
+                    <span style="font-size: 0.7rem; color: var(--accent-neon);">XIMART V3</span>
                 </div>
 
-                <!-- Tab Switcher Login User / Daftar / Login Owner -->
-                <div style="display: flex; gap: 6px; margin-bottom: 16px;">
-                    <button class="btn-secondary" style="flex:1;" id="tab-btn-login" onclick="setAuthMode('login')">Login User</button>
-                    <button class="btn-secondary" style="flex:1;" id="tab-btn-register" onclick="setAuthMode('register')">Daftar User</button>
-                    <button class="btn-secondary" style="flex:1; border-color: var(--glass-border-active); color: var(--accent-neon);" id="tab-btn-owner" onclick="setAuthMode('owner')">Owner</button>
+                <div style="display: flex; gap: 6px; margin-bottom: 14px;">
+                    <button class="btn-secondary" style="flex:1;" onclick="setAuthMode('login')">Login User</button>
+                    <button class="btn-secondary" style="flex:1;" onclick="setAuthMode('register')">Daftar User</button>
+                    <button class="btn-secondary" style="flex:1; border-color: var(--glass-border-active); color: var(--accent-neon);" onclick="setAuthMode('owner')">Owner</button>
                 </div>
 
                 <!-- Form Login User -->
@@ -369,9 +501,9 @@
                         <label>Password</label>
                         <input type="password" id="login-password" class="input-control" placeholder="••••••••">
                     </div>
-                    <button class="btn-primary" onclick="handleUserLogin()">Masuk Sekarang</button>
-                    <div style="text-align: center; margin-top: 12px;">
-                        <button style="background:none; border:none; color: var(--text-secondary); font-size: 0.75rem; cursor: pointer; text-decoration: underline;" onclick="setAuthMode('recover')">Lupa password? Pulihkan akun</button>
+                    <button class="btn-primary" id="btn-do-login-user" onclick="handleUserLogin()">Masuk Akun User</button>
+                    <div style="text-align: center; margin-top: 10px;">
+                        <button style="background:none; border:none; color: var(--text-secondary); font-size: 0.74rem; cursor: pointer; text-decoration: underline;" onclick="setAuthMode('recover')">Lupa password? Pulihkan akun</button>
                     </div>
                 </div>
 
@@ -387,7 +519,7 @@
                     </div>
                     <div class="input-group">
                         <label>Username</label>
-                        <input type="text" id="reg-username" class="input-control" placeholder="Buat username unik">
+                        <input type="text" id="reg-username" class="input-control" placeholder="Buat username">
                     </div>
                     <div class="input-group">
                         <label>Password</label>
@@ -397,19 +529,27 @@
                         <label>Konfirmasi Password</label>
                         <input type="password" id="reg-confirm" class="input-control" placeholder="Ulangi password">
                     </div>
-                    <button class="btn-primary" onclick="handleUserRegister()">Daftar & Simpan Profil</button>
+                    <button class="btn-primary" id="btn-do-register-user" onclick="handleUserRegister()">Daftar Akun Baru</button>
                 </div>
 
                 <!-- Form Login Owner -->
                 <div id="form-login-owner" style="display: none;">
-                    <p style="font-size: 0.78rem; color: var(--text-secondary); margin-bottom: 12px;">
-                        Akses khusus pengendali operasional, dompet, dan manajemen menu XIMART.
+                    <p style="font-size: 0.75rem; color: var(--text-secondary); margin-bottom: 10px;">
+                        Pilih jalur akses Owner (Dana Sarapan atau Dana Dagangan QRIS) lalu masukkan sandi Owner.
                     </p>
+                    <div class="input-group">
+                        <label>Jalur Dana Owner</label>
+                        <select id="owner-jalur-select" class="input-control">
+                            <option value="ALL">Semua Jalur (Dana Sarapan & Dana QRIS)</option>
+                            <option value="DAGANGAN">Owner Dana Dagangan (QRIS — Abang)</option>
+                            <option value="SARAPAN">Owner Dana Sarapan</option>
+                        </select>
+                    </div>
                     <div class="input-group">
                         <label>Password Otoritas Owner</label>
                         <input type="password" id="owner-pass-input" class="input-control" placeholder="Masukkan sandi Owner">
                     </div>
-                    <button class="btn-primary" onclick="handleOwnerLogin()">Verifikasi Masuk Owner</button>
+                    <button class="btn-primary" id="btn-do-login-owner" onclick="handleOwnerLogin()">Masuk Mode Owner</button>
                 </div>
 
                 <!-- Form Pemulihan Akun -->
@@ -431,171 +571,167 @@
             </div>
         </div>
 
-        <!-- ==================== 2. USER BERANDA (PEMESANAN) ==================== -->
-        <div id="view-user-home" style="display: none;">
-            <!-- Greeting & Identitas -->
+        <!-- ==================== 2. USER VIEW (PENGAJUAN & KERANJANG) ==================== -->
+        <div id="view-user" style="display: none;">
+            <!-- Identitas Pengaju -->
             <div class="card">
                 <div class="section-header" style="margin-bottom: 6px;">
-                    <div class="section-title" id="user-greeting">Halo, Pemesan! 👋</div>
-                    <span style="font-size: 0.72rem; color: var(--accent-neon);" id="user-account-status">● Profil Tersimpan</span>
+                    <div class="section-title" id="user-greeting">Halo, Pengaju! 👋</div>
+                    <span style="font-size: 0.7rem; color: var(--accent-neon);" id="user-jalur-label">Jalur: Dana Dagangan (QRIS)</span>
                 </div>
-                <p style="font-size: 0.76rem; color: var(--text-secondary); margin-bottom: 10px;" id="user-wa-display">
-                    Silakan pilih menu atau login agar profil tersimpan otomatis.
+                <p style="font-size: 0.74rem; color: var(--text-secondary); margin-bottom: 8px;" id="user-wa-info">
+                    Login akun agar nama & nomor WA tersimpan otomatis.
                 </p>
-                <!-- Input fallback jika memesan tanpa login -->
-                <div id="guest-identity-fields">
+                <div id="guest-identity-box">
                     <div class="input-group">
-                        <label>Nama Pemesan</label>
-                        <input type="text" id="guest-name" class="input-control" placeholder="Nama Anda (Orang A / B / C)">
+                        <label>Nama Pengaju</label>
+                        <input type="text" id="guest-name" class="input-control" placeholder="Contoh: Orang A">
                     </div>
                     <div class="input-group" style="margin-bottom: 0;">
-                        <label>Nomor WhatsApp Notifikasi</label>
+                        <label>Nomor WhatsApp Anda (untuk notifikasi status)</label>
                         <input type="text" id="guest-wa" class="input-control" placeholder="08xxxxxxxxxx">
                     </div>
                 </div>
             </div>
 
-            <!-- Daftar Menu Makanan -->
-            <div class="card" style="margin-top: 14px;">
-                <div class="section-header">
-                    <div class="section-title">Menu Tersedia</div>
-                    <button class="btn-secondary" onclick="loadAppData(true)">↻ Muat Ulang</button>
-                </div>
-
-                <!-- Filter Kategori -->
-                <div class="category-tabs" id="user-category-tabs">
-                    <button class="cat-chip active" onclick="filterMenuCategory('Semua', this)">Semua</button>
-                    <button class="cat-chip" onclick="filterMenuCategory('Sarapan', this)">Sarapan</button>
-                    <button class="cat-chip" onclick="filterMenuCategory('Gorengan', this)">Gorengan</button>
-                </div>
-
-                <!-- Skeleton Loading -->
-                <div id="user-menu-skeleton">
-                    <div class="skeleton-card"></div>
-                    <div class="skeleton-card"></div>
-                    <div class="skeleton-card"></div>
-                </div>
-
-                <!-- Menu List (Sampai Risol Mayo & Menu Lainnya) -->
-                <div class="menu-grid" id="user-menu-list" style="display: none;"></div>
-            </div>
-
-            <!-- TAMBAHAN KHUSUS: MENU PESANAN BEBAS (Di bawah Risol Mayo, di atas Total Estimasi) -->
-            <div class="card custom-order-box" style="margin-top: 14px;">
-                <div class="section-header" style="margin-bottom: 8px;">
-                    <div class="section-title" style="color: var(--accent-neon);">✍️ Menu Pesanan Tambahan (Bebas)</div>
-                </div>
-                <p style="font-size: 0.74rem; color: var(--text-secondary); margin-bottom: 10px;">
-                    Jika menu yang diinginkan tidak ada di daftar atas, tulis nama pesanan dan nominal harganya di sini:
-                </p>
-                <div style="display: grid; grid-template-columns: 1.4fr 1fr; gap: 8px; margin-bottom: 8px;">
-                    <input type="text" id="custom-order-name" class="input-control" placeholder="Nama pesanan (mis: Bubur)">
-                    <input type="number" id="custom-order-price" class="input-control" placeholder="Harga (Rp)">
-                </div>
-                <button class="btn-secondary" style="width: 100%; border-color: var(--glass-border-active); color: var(--accent-neon);" onclick="addCustomOrderItem()">+ Masukkan ke Keranjang</button>
-                <div id="custom-items-preview" style="margin-top: 8px; display: flex; flex-direction: column; gap: 6px;"></div>
-            </div>
-
-            <!-- Ringkasan & Total Estimasi -->
-            <div class="card" style="margin-top: 14px;">
-                <div id="order-summary-list" style="font-size: 0.78rem; color: var(--text-secondary); margin-bottom: 10px;"></div>
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
-                    <span style="font-size: 0.88rem; color: var(--text-secondary);">Total Estimasi</span>
-                    <span style="font-size: 1.3rem; font-weight: 700; color: var(--accent-neon);" id="user-total-price">Rp 0</span>
-                </div>
-                <button class="btn-primary" onclick="submitUserOrder()">Kirim Pesanan ke Owner</button>
-            </div>
-        </div>
-
-        <!-- ==================== 3. OWNER DASHBOARD (BERANDA & PESANAN) ==================== -->
-        <div id="view-owner-dashboard" style="display: none;">
-            <!-- Dompet Operasional -->
-            <div class="card wallet-card">
-                <div style="font-size: 0.78rem; color: var(--text-secondary);">Saldo Dompet Operasional</div>
-                <div style="font-size: 1.85rem; font-weight: 700; margin: 4px 0 12px 0;" id="owner-saldo-val">Rp 0</div>
-                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; padding-top: 10px; border-top: 1px solid var(--glass-border); margin-bottom: 12px;">
-                    <div>
-                        <span style="font-size: 0.7rem; color: var(--text-secondary);">Total Pemasukan</span>
-                        <div style="font-size: 0.9rem; font-weight: 700; color: var(--accent-neon);" id="owner-in-val">+Rp 0</div>
-                    </div>
-                    <div>
-                        <span style="font-size: 0.7rem; color: var(--text-secondary);">Total Pengeluaran</span>
-                        <div style="font-size: 0.9rem; font-weight: 700; color: var(--status-danger);" id="owner-out-val">-Rp 0</div>
-                    </div>
-                </div>
-                <button class="btn-secondary" style="width: 100%; border-color: var(--glass-border-active); color: var(--accent-neon);" onclick="openModal('modal-topup')">+ Top Up Saldo Dompet</button>
-            </div>
-
-            <!-- Daftar Pesanan Masuk -->
-            <div class="card" style="margin-top: 14px;">
-                <div class="section-header">
-                    <div class="section-title">📦 Antrean Pesanan Masuk</div>
-                    <button class="btn-secondary" onclick="loadAppData(true)">Refresh</button>
-                </div>
-                <div id="owner-orders-skeleton" style="display: none;">
-                    <div class="skeleton-card"></div>
-                    <div class="skeleton-card"></div>
-                </div>
-                <div id="owner-orders-list"></div>
-            </div>
-        </div>
-
-        <!-- ==================== 4. MENU MANAGEMENT (KHUSUS OWNER) ==================== -->
-        <div id="view-owner-menus" style="display: none;">
+            <!-- Pilihan Item / Menu + Tombol Menu Tambahan -->
             <div class="card">
                 <div class="section-header">
-                    <div class="section-title">➕ Tambah Menu Makanan Baru</div>
+                    <div class="section-title" id="catalog-section-title">Pilih Item Dagangan</div>
+                    <button class="btn-secondary" onclick="loadAppData(true)">↻ Refresh</button>
+                </div>
+
+                <div id="user-catalog-skeleton">
+                    <div class="skeleton-card"></div>
+                    <div class="skeleton-card"></div>
+                </div>
+
+                <div class="item-grid" id="user-catalog-grid" style="display: none;"></div>
+            </div>
+
+            <!-- Keranjang Draft (Siap Dikirim ke Owner) -->
+            <div class="card">
+                <div class="section-header">
+                    <div class="section-title">🛒 Keranjang Pengajuan</div>
+                    <span style="font-size: 0.72rem; color: var(--text-secondary);" id="draft-count-badge">0 item</span>
+                </div>
+                <div id="draft-cart-list">
+                    <p style="font-size: 0.78rem; color: var(--text-secondary);">Belum ada item di keranjang. Ketuk item di atas atau klik <strong>+ Menu Tambahan</strong>.</p>
+                </div>
+                <div style="display: flex; justify-content: space-between; align-items: center; margin: 12px 0; padding-top: 10px; border-top: 1px solid var(--glass-border);">
+                    <span style="font-size: 0.84rem; color: var(--text-secondary);">Total Pengajuan</span>
+                    <span style="font-size: 1.22rem; font-weight: 700; color: var(--accent-neon);" id="draft-total-price">Rp 0</span>
+                </div>
+                <button class="btn-primary" id="btn-submit-orders" onclick="submitDraftOrders()">Kirim Pesanan & Notifikasi WA</button>
+            </div>
+
+            <!-- Daftar Pesanan "BELUM DIBAYAR" Milik User (Bisa Edit Nominal & Hapus Live) -->
+            <div class="card">
+                <div class="section-header">
+                    <div class="section-title">⏳ Pesanan Belum Dibayar</div>
+                    <span style="font-size: 0.68rem; color: var(--status-warn);">Bisa Edit / Hapus</span>
+                </div>
+                <p style="font-size: 0.72rem; color: var(--text-secondary); margin-bottom: 10px;">
+                    Perubahan nominal atau penghapusan sebelum diproses Owner otomatis mengirim notifikasi WA ke Owner.
+                </p>
+                <div id="user-unpaid-orders-list"></div>
+            </div>
+        </div>
+
+        <!-- ==================== 3. OWNER DASHBOARD (SALDO & BELUM DIBAYAR) ==================== -->
+        <div id="view-owner" style="display: none;">
+            <div class="card wallet-card">
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <span style="font-size: 0.76rem; color: var(--text-secondary);" id="owner-wallet-title">Saldo Dana Dagangan (QRIS)</span>
+                    <span class="brand-badge" id="owner-jalur-badge">DAGANGAN</span>
+                </div>
+                <div style="font-size: 1.8rem; font-weight: 700; margin: 6px 0 12px 0;" id="owner-saldo-display">Rp 0</div>
+
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; padding-top: 10px; border-top: 1px solid var(--glass-border); margin-bottom: 12px;">
+                    <div>
+                        <span style="font-size: 0.7rem; color: var(--text-secondary);">Total Masuk</span>
+                        <div style="font-size: 0.9rem; font-weight: 700; color: var(--accent-neon);" id="owner-in-display">+Rp 0</div>
+                    </div>
+                    <div>
+                        <span style="font-size: 0.7rem; color: var(--text-secondary);">Total Keluar</span>
+                        <div style="font-size: 0.9rem; font-weight: 700; color: var(--status-danger);" id="owner-out-display">-Rp 0</div>
+                    </div>
+                </div>
+
+                <button class="btn-secondary" style="width: 100%; border-color: var(--glass-border-active); color: var(--accent-neon);" onclick="openModal('modal-add-fund')">+ Tambah Dana / Kas Masuk</button>
+            </div>
+
+            <div class="card">
+                <div class="section-header">
+                    <div class="section-title">📥 Daftar Belum Dibayar</div>
+                    <button class="btn-secondary" onclick="loadAppData(true)">↻ Refresh</button>
+                </div>
+                <div id="owner-unpaid-list"></div>
+            </div>
+        </div>
+
+        <!-- ==================== 4. KELOLA MENU (OWNER) ==================== -->
+        <div id="view-menus" style="display: none;">
+            <div class="card">
+                <div class="section-header">
+                    <div class="section-title">➕ Tambah Menu / Item Baru</div>
                 </div>
                 <div class="input-group">
-                    <label>Nama Makanan / Minuman</label>
-                    <input type="text" id="new-menu-name" class="input-control" placeholder="Contoh: Nasi Goreng Spesial">
+                    <label>Jalur Dana</label>
+                    <select id="new-menu-jalur" class="input-control">
+                        <option value="DAGANGAN">Dana Dagangan (QRIS)</option>
+                        <option value="SARAPAN">Dana Sarapan</option>
+                    </select>
+                </div>
+                <div class="input-group">
+                    <label>Nama Item / Menu</label>
+                    <input type="text" id="new-menu-name" class="input-control" placeholder="Contoh: Bebek / Ayam / Nasi Uduk">
                 </div>
                 <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
                     <div class="input-group">
-                        <label>Harga (Rp)</label>
-                        <input type="number" id="new-menu-price" class="input-control" placeholder="12000">
+                        <label>Harga Default (Rp, 0 jika diinput user)</label>
+                        <input type="number" id="new-menu-price" class="input-control" value="0">
                     </div>
                     <div class="input-group">
                         <label>Kategori</label>
-                        <input type="text" id="new-menu-cat" class="input-control" value="Sarapan" placeholder="Sarapan / Gorengan">
+                        <input type="text" id="new-menu-cat" class="input-control" value="Bahan Baku">
                     </div>
                 </div>
-                <button class="btn-primary" onclick="ownerAddMenu()">Simpan Menu Baru</button>
+                <button class="btn-primary" onclick="ownerAddMenu()">Simpan Item Baru</button>
             </div>
 
-            <div class="card" style="margin-top: 14px;">
+            <div class="card">
                 <div class="section-header">
-                    <div class="section-title">📋 Kelola Daftar Menu & Stok</div>
+                    <div class="section-title">📋 Daftar Item & Ketersediaan</div>
                 </div>
-                <div id="owner-manage-menu-list"></div>
+                <div id="owner-menu-manage-list"></div>
             </div>
         </div>
 
         <!-- ==================== 5. RIWAYAT & STATISTIK ==================== -->
         <div id="view-history" style="display: none;">
-            <!-- Grafik Statistik (Owner) -->
-            <div class="card" id="owner-chart-card" style="display: none; margin-bottom: 14px;">
+            <div class="card" id="owner-chart-card" style="display: none;">
                 <div class="section-header">
-                    <div class="section-title">📊 Statistik Pemasukan vs Pengeluaran</div>
+                    <div class="section-title" id="chart-title">📊 Statistik Kas Masuk vs Keluar</div>
                 </div>
-                <canvas id="financeChart" style="max-height: 210px;"></canvas>
+                <canvas id="financeChart" style="max-height: 205px;"></canvas>
             </div>
 
             <div class="card">
                 <div class="section-header">
-                    <div class="section-title" id="history-title">🕒 Riwayat Pesanan & Transaksi</div>
-                    <button class="btn-secondary" onclick="loadAppData(true)">Refresh</button>
+                    <div class="section-title">🕒 Riwayat Pesanan & Keputusan</div>
+                    <button class="btn-secondary" onclick="loadAppData(true)">↻ Refresh</button>
                 </div>
-                <div id="history-list-container"></div>
+                <div id="history-orders-list"></div>
             </div>
         </div>
 
-        <!-- ==================== 6. PROFIL PENGGUNA / OWNER ==================== -->
+        <!-- ==================== 6. PROFIL ==================== -->
         <div id="view-profile" style="display: none;">
             <div class="card">
                 <div class="section-header">
-                    <div class="section-title">👤 Pengaturan Profil Akun</div>
-                    <span class="brand-badge" id="profile-role-tag">USER</span>
+                    <div class="section-title">👤 Profil Akun</div>
+                    <span class="brand-badge" id="profile-role-badge">USER</span>
                 </div>
 
                 <div class="input-group">
@@ -607,118 +743,171 @@
                     <input type="text" id="prof-wa" class="input-control">
                 </div>
                 <div class="input-group" id="prof-pass-group">
-                    <label>Ubah Password (Kosongkan jika tidak ingin mengganti)</label>
+                    <label>Password Baru (Kosongkan jika tidak diganti)</label>
                     <input type="password" id="prof-newpass" class="input-control" placeholder="Password baru">
                 </div>
-                <button class="btn-primary" id="btn-save-profile" onclick="saveProfileChanges()">Simpan Perubahan Profil</button>
-                <button class="btn-secondary" style="width: 100%; margin-top: 12px; background: var(--status-danger-bg); color: var(--status-danger); border-color: rgba(255,77,77,0.3);" onclick="logoutAccount()">Keluar (Logout)</button>
+                <button class="btn-primary" id="btn-save-profile" onclick="saveProfileChanges()">Simpan Perubahan</button>
+                <button class="btn-secondary" style="width: 100%; margin-top: 10px; background: var(--status-danger-bg); color: var(--status-danger); border-color: rgba(255,77,77,0.35);" onclick="logoutAccount()">Keluar (Logout)</button>
             </div>
         </div>
 
     </div>
 
-    <!-- Bottom Navigation (5 Menu) -->
+    <!-- Floating Bottom Navigation (5 Menu) -->
     <nav class="nav-bar">
         <div class="nav-container">
-            <button class="nav-item active" onclick="switchNav('beranda')" id="nav-beranda">
+            <button class="nav-item active" id="nav-beranda" onclick="switchNav('beranda')">
                 <span class="nav-icon">🏠</span><span>Beranda</span>
             </button>
-            <button class="nav-item" onclick="switchNav('pesanan')" id="nav-pesanan">
-                <span class="nav-icon">📦</span><span>Pesanan</span>
+            <button class="nav-item" id="nav-belumbayar" onclick="switchNav('belumbayar')">
+                <span class="nav-icon">⏳</span><span>Tagihan</span>
             </button>
-            <button class="nav-item" onclick="switchNav('menu')" id="nav-menu">
+            <button class="nav-item" id="nav-menu" onclick="switchNav('menu')">
                 <span class="nav-icon">➕</span><span>Menu</span>
             </button>
-            <button class="nav-item" onclick="switchNav('riwayat')" id="nav-riwayat">
+            <button class="nav-item" id="nav-riwayat" onclick="switchNav('riwayat')">
                 <span class="nav-icon">📊</span><span>Riwayat</span>
             </button>
-            <button class="nav-item" onclick="switchNav('profil')" id="nav-profil">
+            <button class="nav-item" id="nav-profil" onclick="switchNav('profil')">
                 <span class="nav-icon">👤</span><span>Profil</span>
             </button>
         </div>
     </nav>
 
-    <!-- Modal Top Up -->
-    <div class="modal-overlay" id="modal-topup">
+    <!-- MODAL 1: POP-UP PILIH ITEM (DESKRIPSI OPSIONAL + NOMINAL HARGA) -->
+    <div class="modal-overlay" id="modal-item-popup">
         <div class="modal-body">
-            <div class="section-title" style="margin-bottom: 12px;">Top Up Saldo Dompet Owner</div>
+            <div class="section-title" style="margin-bottom: 4px;" id="popup-item-title">Pembelian Item</div>
+            <p style="font-size: 0.73rem; color: var(--text-secondary); margin-bottom: 12px;">
+                Isi deskripsi (opsional, misal: jumlah potong/ekor) dan nominal harga yang dibeli.
+            </p>
+            <input type="hidden" id="popup-item-id">
             <div class="input-group">
-                <label>Nominal Top Up (Rp)</label>
-                <input type="number" id="input-topup-val" class="input-control" placeholder="Contoh: 50000">
+                <label>Deskripsi (Opsional — misal: 2 ekor / 10 potong)</label>
+                <input type="text" id="popup-item-desc" class="input-control" placeholder="Tidak wajib diisi">
             </div>
-            <div style="display: flex; gap: 8px; justify-content: flex-end; margin-top: 14px;">
-                <button class="btn-secondary" onclick="closeModal('modal-topup')">Batal</button>
-                <button class="btn-primary" style="width: auto; padding: 10px 18px;" onclick="submitTopUp()">Konfirmasi</button>
+            <div class="input-group">
+                <label>Nominal Harga (Rp)</label>
+                <input type="number" id="popup-item-price" class="input-control" placeholder="Contoh: 300000">
+            </div>
+            <div style="display: flex; gap: 8px; justify-content: flex-end; margin-top: 12px;">
+                <button class="btn-secondary" onclick="closeModal('modal-item-popup')">Batal</button>
+                <button class="btn-primary" style="width: auto; padding: 10px 16px;" onclick="confirmItemPopup()">Masuk Keranjang</button>
             </div>
         </div>
     </div>
 
-    <!-- Modal Sold / Batalkan -->
-    <div class="modal-overlay" id="modal-kendala">
+    <!-- MODAL 2: POP-UP MENU TAMBAHAN -->
+    <div class="modal-overlay" id="modal-custom-item">
         <div class="modal-body">
-            <div class="section-title" style="margin-bottom: 12px;" id="kendala-modal-title">Konfirmasi Kendala / Sold</div>
-            <input type="hidden" id="kendala-row">
-            <input type="hidden" id="kendala-type">
+            <div class="section-title" style="margin-bottom: 4px;">➕ Menu Tambahan</div>
+            <p style="font-size: 0.73rem; color: var(--text-secondary); margin-bottom: 12px;">
+                Tambahkan item di luar daftar pilihan yang tersedia.
+            </p>
             <div class="input-group">
-                <label>Catatan untuk Pembeli (Terkirim ke WhatsApp)</label>
-                <input type="text" id="kendala-note" class="input-control" placeholder="Misal: Stok habis di warung">
+                <label>Nama Menu / Item</label>
+                <input type="text" id="custom-modal-name" class="input-control" placeholder="Contoh: Bumbu / Kemasan">
             </div>
-            <div style="display: flex; gap: 8px; justify-content: flex-end; margin-top: 14px;">
-                <button class="btn-secondary" onclick="closeModal('modal-kendala')">Batal</button>
-                <button class="btn-primary" style="width: auto; padding: 10px 18px; background: var(--status-danger); color: #fff; box-shadow: none;" onclick="confirmKendala()">Kirim Notifikasi</button>
+            <div class="input-group">
+                <label>Deskripsi (Opsional)</label>
+                <input type="text" id="custom-modal-desc" class="input-control" placeholder="Misal: 5 pack (tidak wajib)">
+            </div>
+            <div class="input-group">
+                <label>Nominal Harga (Rp)</label>
+                <input type="number" id="custom-modal-price" class="input-control" placeholder="Contoh: 50000">
+            </div>
+            <div style="display: flex; gap: 8px; justify-content: flex-end; margin-top: 12px;">
+                <button class="btn-secondary" onclick="closeModal('modal-custom-item')">Batal</button>
+                <button class="btn-primary" style="width: auto; padding: 10px 16px;" onclick="confirmCustomItemModal()">Tambah ke Keranjang</button>
             </div>
         </div>
     </div>
 
-    <!-- Modal Edit Menu Owner -->
-    <div class="modal-overlay" id="modal-edit-menu">
+    <!-- MODAL 3: EDIT NOMINAL PESANAN BELUM DIBAYAR (USER) -->
+    <div class="modal-overlay" id="modal-edit-unpaid">
         <div class="modal-body">
-            <div class="section-title" style="margin-bottom: 12px;">Edit Menu Makanan</div>
-            <input type="hidden" id="edit-menu-row">
+            <div class="section-title" style="margin-bottom: 6px;">✏️ Edit Nominal Pesanan</div>
+            <p style="font-size: 0.72rem; color: var(--text-secondary); margin-bottom: 12px;" id="edit-unpaid-info"></p>
+            <input type="hidden" id="edit-unpaid-row">
             <div class="input-group">
-                <label>Nama Makanan</label>
-                <input type="text" id="edit-menu-name" class="input-control">
+                <label>Deskripsi (Opsional)</label>
+                <input type="text" id="edit-unpaid-desc" class="input-control" placeholder="Keterangan jumlah/catatan">
             </div>
             <div class="input-group">
-                <label>Harga (Rp)</label>
-                <input type="number" id="edit-menu-price" class="input-control">
+                <label>Nominal Baru (Rp)</label>
+                <input type="number" id="edit-unpaid-nominal" class="input-control" placeholder="Contoh: 3000000">
+            </div>
+            <div style="display: flex; gap: 8px; justify-content: flex-end; margin-top: 12px;">
+                <button class="btn-secondary" onclick="closeModal('modal-edit-unpaid')">Batal</button>
+                <button class="btn-primary" style="width: auto; padding: 10px 16px;" onclick="submitEditUnpaidOrder()">Simpan & Kabari Owner</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL 4: TAMBAH DANA / SALDO OWNER -->
+    <div class="modal-overlay" id="modal-add-fund">
+        <div class="modal-body">
+            <div class="section-title" style="margin-bottom: 10px;" id="add-fund-title">Tambah Saldo Dompet</div>
+            <div class="input-group">
+                <label>Nominal Masuk (Rp)</label>
+                <input type="number" id="input-fund-nominal" class="input-control" placeholder="Contoh: 500000">
             </div>
             <div class="input-group">
-                <label>Kategori</label>
-                <input type="text" id="edit-menu-cat" class="input-control">
+                <label>Keterangan (Opsional)</label>
+                <input type="text" id="input-fund-ket" class="input-control" placeholder="Misal: Kas masuk QRIS hari ini">
             </div>
-            <div style="display: flex; gap: 8px; justify-content: flex-end; margin-top: 14px;">
-                <button class="btn-secondary" onclick="closeModal('modal-edit-menu')">Batal</button>
-                <button class="btn-primary" style="width: auto; padding: 10px 18px;" onclick="submitEditMenu()">Simpan</button>
+            <div style="display: flex; gap: 8px; justify-content: flex-end; margin-top: 12px;">
+                <button class="btn-secondary" onclick="closeModal('modal-add-fund')">Batal</button>
+                <button class="btn-primary" style="width: auto; padding: 10px 16px;" onclick="submitAddFund()">Simpan Saldo</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL 5: KEPUTUSAN OWNER (TIDAK DIBAYARKAN / CATATAN) -->
+    <div class="modal-overlay" id="modal-reject-order">
+        <div class="modal-body">
+            <div class="section-title" style="margin-bottom: 8px;">❌ Tidak Dibayarkan</div>
+            <p style="font-size: 0.73rem; color: var(--text-secondary); margin-bottom: 10px;">
+                User akan menerima notifikasi WhatsApp bahwa pesanan ini tidak dibayarkan.
+            </p>
+            <input type="hidden" id="reject-order-row">
+            <div class="input-group">
+                <label>Alasan / Catatan untuk User (Opsional)</label>
+                <input type="text" id="reject-order-note" class="input-control" placeholder="Misal: Saldo belum cukup / stok kosong">
+            </div>
+            <div style="display: flex; gap: 8px; justify-content: flex-end; margin-top: 12px;">
+                <button class="btn-secondary" onclick="closeModal('modal-reject-order')">Batal</button>
+                <button class="btn-primary" style="width: auto; padding: 10px 16px; background: var(--status-danger); color: #fff; box-shadow: none;" onclick="confirmRejectOrder()">Konfirmasi Tidak Dibayar</button>
             </div>
         </div>
     </div>
 
     <script>
-        // URL Backend Google Apps Script Aktif
-        const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbyYbGuWpwcsYk83gHWDd44Ls_7Gp6pMVwFLTR-6ITPPnpML_yRESkBLGyWzeP_VjL6x/exec";
+        const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbx335GIarvqAbY5E-tg3noPUsW9k3_rD9dLq0jAYYteTSNcvrQ1zxcFL_F_ieRCJUaI9A/exec";
 
-        // Default fallback menu sebelum database termuat
-        let appMenus = [
-            { row: 2, id: 'M-001', nama: 'Nasi Uduk', harga: 8000, kategori: 'Sarapan', tersedia: true, qty: 0 },
-            { row: 3, id: 'M-002', nama: 'Nasi Kuning', harga: 8000, kategori: 'Sarapan', tersedia: true, qty: 0 },
-            { row: 4, id: 'M-003', nama: 'Telur Bulat/Dadar', harga: 5000, kategori: 'Sarapan', tersedia: true, qty: 0 },
-            { row: 5, id: 'M-004', nama: 'Bakwan', harga: 1500, kategori: 'Gorengan', tersedia: true, qty: 0 },
-            { row: 6, id: 'M-005', nama: 'Tempe Goreng', harga: 1000, kategori: 'Gorengan', tersedia: true, qty: 0 },
-            { row: 7, id: 'M-006', nama: 'Lontong', harga: 1500, kategori: 'Sarapan', tersedia: true, qty: 0 },
-            { row: 8, id: 'M-007', nama: 'Risol Mayo', harga: 3000, kategori: 'Gorengan', tersedia: true, qty: 0 }
-        ];
-
-        let customCartItems = [];
-        let allOrders = [];
-        let financeLogs = [];
-        let ownerSaldo = 0;
-        let selectedCategory = 'Semua';
-        let currentUser = null; // { id, username, nama, wa, role }
+        let activeJalur = 'DAGANGAN';
+        let currentUser = null;
         let soundEnabled = true;
         let chartInstance = null;
 
-        // ==================== MORPH UI SOUND (Web Audio API) ====================
+        let appMenus = [
+            { row: 2, id: 'M-001', nama: 'Nasi Uduk', harga: 8000, jalur: 'SARAPAN', kategori: 'Sarapan', tersedia: true },
+            { row: 3, id: 'M-002', nama: 'Nasi Kuning', harga: 8000, jalur: 'SARAPAN', kategori: 'Sarapan', tersedia: true },
+            { row: 4, id: 'M-003', nama: 'Telur Bulat/Dadar', harga: 5000, jalur: 'SARAPAN', kategori: 'Sarapan', tersedia: true },
+            { row: 5, id: 'M-004', nama: 'Bakwan', harga: 1500, jalur: 'SARAPAN', kategori: 'Gorengan', tersedia: true },
+            { row: 6, id: 'M-005', nama: 'Tempe Goreng', harga: 1000, jalur: 'SARAPAN', kategori: 'Gorengan', tersedia: true },
+            { row: 7, id: 'M-006', nama: 'Lontong', harga: 1500, jalur: 'SARAPAN', kategori: 'Sarapan', tersedia: true },
+            { row: 8, id: 'M-007', nama: 'Risol Mayo', harga: 3000, jalur: 'SARAPAN', kategori: 'Gorengan', tersedia: true },
+            { row: 9, id: 'D-001', nama: 'Ayam', harga: 0, jalur: 'DAGANGAN', kategori: 'Bahan Baku', tersedia: true },
+            { row: 10, id: 'D-002', nama: 'Bebek', harga: 0, jalur: 'DAGANGAN', kategori: 'Bahan Baku', tersedia: true }
+        ];
+
+        let draftCart = [];
+        let allOrders = [];
+        let financeLogs = [];
+        let saldoSarapan = 0;
+        let saldoQris = 0;
+
         function playMorphSound(type = 'tap') {
             if (!soundEnabled) return;
             try {
@@ -727,24 +916,23 @@
                 const gain = ctx.createGain();
                 osc.connect(gain);
                 gain.connect(ctx.destination);
-
                 if (type === 'tap') {
                     osc.frequency.setValueAtTime(520, ctx.currentTime);
-                    osc.frequency.exponentialRampToValueAtTime(300, ctx.currentTime + 0.06);
-                    gain.gain.setValueAtTime(0.06, ctx.currentTime);
-                    gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.06);
-                    osc.start(); osc.stop(ctx.currentTime + 0.06);
+                    osc.frequency.exponentialRampToValueAtTime(300, ctx.currentTime + 0.055);
+                    gain.gain.setValueAtTime(0.05, ctx.currentTime);
+                    gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.055);
+                    osc.start(); osc.stop(ctx.currentTime + 0.055);
                 } else if (type === 'success') {
                     osc.frequency.setValueAtTime(580, ctx.currentTime);
                     osc.frequency.setValueAtTime(840, ctx.currentTime + 0.08);
-                    gain.gain.setValueAtTime(0.08, ctx.currentTime);
-                    gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.18);
-                    osc.start(); osc.stop(ctx.currentTime + 0.18);
-                } else if (type === 'error') {
+                    gain.gain.setValueAtTime(0.07, ctx.currentTime);
+                    gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.17);
+                    osc.start(); osc.stop(ctx.currentTime + 0.17);
+                } else {
                     osc.frequency.setValueAtTime(220, ctx.currentTime);
-                    gain.gain.setValueAtTime(0.08, ctx.currentTime);
-                    gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.15);
-                    osc.start(); osc.stop(ctx.currentTime + 0.15);
+                    gain.gain.setValueAtTime(0.07, ctx.currentTime);
+                    gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.14);
+                    osc.start(); osc.stop(ctx.currentTime + 0.14);
                 }
             } catch (e) {}
         }
@@ -752,27 +940,60 @@
         function toggleSound() {
             soundEnabled = !soundEnabled;
             document.getElementById('sound-toggle-btn').innerText = soundEnabled ? '🔊' : '🔇';
-            showToast(soundEnabled ? 'Suara Morph UI Aktif' : 'Suara Dimatikan');
+            showToast(soundEnabled ? 'Suara aktif' : 'Suara dimatikan');
         }
 
         function showToast(msg) {
             const box = document.getElementById('toast-box');
             box.innerText = msg;
             box.classList.add('show');
-            setTimeout(() => box.classList.remove('show'), 2600);
+            setTimeout(() => box.classList.remove('show'), 2800);
         }
 
-        // ==================== INIT & SESSION MANAGEMENT ====================
+        async function postAPI(payload) {
+            const res = await fetch(WEB_APP_URL, {
+                method: 'POST',
+                headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+                body: JSON.stringify(payload),
+                redirect: 'follow'
+            });
+            const text = await res.text();
+            return JSON.parse(text);
+        }
+
         window.onload = function() {
-            const savedSession = localStorage.getItem('XIMART_SESSION_V2');
+            const savedSession = localStorage.getItem('XIMART_V3_SESSION');
             if (savedSession) {
-                currentUser = JSON.parse(savedSession);
+                try { currentUser = JSON.parse(savedSession); } catch (e) {}
             }
-            updateSessionUI();
+            const savedJalur = localStorage.getItem('XIMART_V3_JALUR');
+            if (savedJalur === 'SARAPAN' || savedJalur === 'DAGANGAN') {
+                activeJalur = savedJalur;
+            }
+            syncJalurButtons();
+            updateSessionHeader();
+            switchNav('beranda');
             loadAppData(false);
         };
 
-        function updateSessionUI() {
+        function selectJalur(jalur) {
+            playMorphSound('tap');
+            activeJalur = jalur;
+            localStorage.setItem('XIMART_V3_JALUR', jalur);
+            syncJalurButtons();
+            renderAllViews();
+        }
+
+        function syncJalurButtons() {
+            document.getElementById('btn-jalur-sarapan').classList.toggle('active', activeJalur === 'SARAPAN');
+            document.getElementById('btn-jalur-dagangan').classList.toggle('active', activeJalur === 'DAGANGAN');
+            const labelJalur = activeJalur === 'SARAPAN' ? 'Dana Sarapan' : 'Dana Dagangan (QRIS)';
+            document.getElementById('user-jalur-label').innerText = `Jalur: ${labelJalur}`;
+            document.getElementById('catalog-section-title').innerText =
+                activeJalur === 'SARAPAN' ? 'Pilih Menu Sarapan' : 'Pilih Item Dagangan';
+        }
+
+        function updateSessionHeader() {
             const badge = document.getElementById('header-role-badge');
             const authBtn = document.getElementById('header-auth-btn');
 
@@ -780,83 +1001,70 @@
                 badge.innerText = currentUser.role === 'OWNER' ? 'OWNER' : currentUser.nama.toUpperCase();
                 authBtn.innerText = 'Profil';
                 document.getElementById('user-greeting').innerText = `Halo, ${currentUser.nama}! 👋`;
-                document.getElementById('user-wa-display').innerText = `WhatsApp Notifikasi: ${currentUser.wa || 'Admin Owner'}`;
-                document.getElementById('user-account-status').innerText = '● Akun Terverifikasi';
-                document.getElementById('guest-identity-fields').style.display = 'none';
+                document.getElementById('user-wa-info').innerText = `WhatsApp Anda: ${currentUser.wa || '-'}`;
+                document.getElementById('guest-identity-box').style.display = 'none';
             } else {
                 badge.innerText = 'TAMU';
-                authBtn.innerText = 'Masuk / Daftar';
-                document.getElementById('user-greeting').innerText = 'Halo, Pemesan! 👋';
-                document.getElementById('user-wa-display').innerText = 'Login agar nama & nomor WA tersimpan otomatis.';
-                document.getElementById('user-account-status').innerText = '○ Mode Tamu';
-                document.getElementById('guest-identity-fields').style.display = 'block';
-            }
-
-            if (currentUser && currentUser.role === 'OWNER') {
-                switchNav('beranda');
-            } else {
-                switchNav('beranda');
+                authBtn.innerText = 'Masuk';
+                document.getElementById('user-greeting').innerText = 'Halo, Pengaju! 👋';
+                document.getElementById('user-wa-info').innerText = 'Login akun agar nama & nomor WA tersimpan otomatis.';
+                document.getElementById('guest-identity-box').style.display = 'block';
             }
         }
 
-        // ==================== FETCH DATABASE ====================
-        async function loadAppData(manualRefresh = false) {
-            if (manualRefresh) playMorphSound('tap');
-            document.getElementById('user-menu-skeleton').style.display = 'block';
-            document.getElementById('user-menu-list').style.display = 'none';
-            document.getElementById('owner-orders-skeleton').style.display = 'block';
+        async function loadAppData(withSound = false) {
+            if (withSound) playMorphSound('tap');
+            document.getElementById('user-catalog-skeleton').style.display = 'block';
+            document.getElementById('user-catalog-grid').style.display = 'none';
 
             try {
-                const res = await fetch(`${WEB_APP_URL}?action=getInitData`);
+                const res = await fetch(`${WEB_APP_URL}?action=getInitData&t=${Date.now()}`, { redirect: 'follow' });
                 const data = await res.json();
                 if (data.status === 'success') {
-                    if (data.menus && data.menus.length > 0) {
-                        const qtyMap = {};
-                        appMenus.forEach(m => qtyMap[m.nama] = m.qty || 0);
-                        appMenus = data.menus.map(m => ({ ...m, qty: qtyMap[m.nama] || 0 }));
+                    if (Array.isArray(data.menus) && data.menus.length > 0) {
+                        appMenus = data.menus;
                     }
-                    allOrders = data.orders || [];
-                    ownerSaldo = data.saldo || 0;
-                    financeLogs = data.financeLogs || [];
+                    allOrders = Array.isArray(data.orders) ? data.orders : [];
+                    financeLogs = Array.isArray(data.financeLogs) ? data.financeLogs : [];
+                    saldoSarapan = Number(data.saldoSarapan) || 0;
+                    saldoQris = Number(data.saldoQris) || 0;
                 }
-            } catch (e) {
-                console.log("Menggunakan cache lokal sementara.");
+            } catch (err) {
+                console.log('Load data fallback:', err);
             }
 
-            document.getElementById('user-menu-skeleton').style.display = 'none';
-            document.getElementById('user-menu-list').style.display = 'flex';
-            document.getElementById('owner-orders-skeleton').style.display = 'none';
-
-            renderUserMenus();
-            renderOwnerDashboard();
-            renderOwnerManageMenus();
-            renderHistoryView();
+            document.getElementById('user-catalog-skeleton').style.display = 'none';
+            document.getElementById('user-catalog-grid').style.display = 'grid';
+            renderAllViews();
         }
 
-        // ==================== NAVIGATION CONTROLLER ====================
         function switchNav(tab) {
             playMorphSound('tap');
-            document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
-            const activeBtn = document.getElementById(`nav-${tab}`);
-            if (activeBtn) activeBtn.classList.add('active');
+            document.querySelectorAll('.nav-item').forEach(b => b.classList.remove('active'));
+            const navEl = document.getElementById(`nav-${tab}`);
+            if (navEl) navEl.classList.add('active');
 
-            const views = ['view-auth', 'view-user-home', 'view-owner-dashboard', 'view-owner-menus', 'view-history', 'view-profile'];
-            views.forEach(v => document.getElementById(v).style.display = 'none');
+            ['view-auth', 'view-user', 'view-owner', 'view-menus', 'view-history', 'view-profile']
+                .forEach(id => document.getElementById(id).style.display = 'none');
 
             const isOwner = currentUser && currentUser.role === 'OWNER';
 
             if (tab === 'beranda') {
-                if (isOwner) document.getElementById('view-owner-dashboard').style.display = 'block';
-                else document.getElementById('view-user-home').style.display = 'block';
-            } else if (tab === 'pesanan') {
-                if (isOwner) document.getElementById('view-owner-dashboard').style.display = 'block';
-                else document.getElementById('view-user-home').style.display = 'block';
+                if (isOwner) document.getElementById('view-owner').style.display = 'block';
+                else document.getElementById('view-user').style.display = 'block';
+            } else if (tab === 'belumbayar') {
+                if (isOwner) document.getElementById('view-owner').style.display = 'block';
+                else document.getElementById('view-user').style.display = 'block';
+                const targetCard = isOwner
+                    ? document.getElementById('owner-unpaid-list')
+                    : document.getElementById('user-unpaid-orders-list');
+                if (targetCard) targetCard.scrollIntoView({ behavior: 'smooth', block: 'center' });
             } else if (tab === 'menu') {
                 if (isOwner) {
-                    document.getElementById('view-owner-menus').style.display = 'block';
+                    document.getElementById('view-menus').style.display = 'block';
                 } else {
-                    showToast('Fitur Kelola Menu khusus Owner');
-                    document.getElementById('view-user-home').style.display = 'block';
+                    showToast('Kelola katalog menu khusus akun Owner');
+                    document.getElementById('view-user').style.display = 'block';
                 }
             } else if (tab === 'riwayat') {
                 document.getElementById('view-history').style.display = 'block';
@@ -866,8 +1074,8 @@
                     document.getElementById('view-auth').style.display = 'block';
                 } else {
                     document.getElementById('view-profile').style.display = 'block';
-                    document.getElementById('profile-role-tag').innerText = currentUser.role;
-                    document.getElementById('prof-nama').value = currentUser.nama;
+                    document.getElementById('profile-role-badge').innerText = currentUser.role;
+                    document.getElementById('prof-nama').value = currentUser.nama || '';
                     document.getElementById('prof-wa').value = currentUser.wa || '';
                     document.getElementById('prof-wa-group').style.display = isOwner ? 'none' : 'flex';
                     document.getElementById('prof-pass-group').style.display = isOwner ? 'none' : 'flex';
@@ -876,23 +1084,21 @@
             }
         }
 
-        // ==================== AUTH HANDLERS ====================
         function setAuthMode(mode) {
             playMorphSound('tap');
-            ['form-login-user', 'form-register-user', 'form-login-owner', 'form-recover-user'].forEach(id => {
-                document.getElementById(id).style.display = 'none';
-            });
+            ['form-login-user', 'form-register-user', 'form-login-owner', 'form-recover-user']
+                .forEach(id => document.getElementById(id).style.display = 'none');
             if (mode === 'login') {
                 document.getElementById('auth-title').innerText = 'Masuk Akun User';
                 document.getElementById('form-login-user').style.display = 'block';
             } else if (mode === 'register') {
-                document.getElementById('auth-title').innerText = 'Registrasi User Baru';
+                document.getElementById('auth-title').innerText = 'Daftar Akun User';
                 document.getElementById('form-register-user').style.display = 'block';
             } else if (mode === 'owner') {
                 document.getElementById('auth-title').innerText = 'Login Otoritas Owner';
                 document.getElementById('form-login-owner').style.display = 'block';
             } else if (mode === 'recover') {
-                document.getElementById('auth-title').innerText = 'Pemulihan Akun User';
+                document.getElementById('auth-title').innerText = 'Pulihkan Akun User';
                 document.getElementById('form-recover-user').style.display = 'block';
             }
         }
@@ -904,98 +1110,140 @@
             const password = document.getElementById('reg-password').value;
             const confirm = document.getElementById('reg-confirm').value;
 
-            if (!nama || !wa || !username || !password) return showToast('Lengkapi semua data pendaftaran!');
-            if (password !== confirm) return showToast('Konfirmasi password tidak cocok!');
+            if (!nama || !wa || !username || !password) {
+                playMorphSound('error');
+                return showToast('Lengkapi semua kolom pendaftaran.');
+            }
+            if (password.length < 6) {
+                playMorphSound('error');
+                return showToast('Password minimal 6 karakter.');
+            }
+            if (password !== confirm) {
+                playMorphSound('error');
+                return showToast('Konfirmasi password tidak cocok.');
+            }
 
-            showToast('Mendaftarkan akun...');
+            const btn = document.getElementById('btn-do-register-user');
+            btn.disabled = true;
+            btn.innerText = 'Mendaftarkan...';
             try {
-                const res = await fetch(WEB_APP_URL, {
-                    method: 'POST',
-                    body: JSON.stringify({ action: 'registerUser', nama, wa, username, password })
-                });
-                const data = await res.json();
+                const data = await postAPI({ action: 'registerUser', nama, wa, username, password });
                 if (data.status === 'success') {
                     playMorphSound('success');
                     currentUser = data.user;
-                    localStorage.setItem('XIMART_SESSION_V2', JSON.stringify(currentUser));
-                    showToast('Akun berhasil dibuat!');
-                    updateSessionUI();
+                    localStorage.setItem('XIMART_V3_SESSION', JSON.stringify(currentUser));
+                    updateSessionHeader();
+                    showToast('Akun user berhasil dibuat!');
+                    switchNav('beranda');
+                    renderAllViews();
                 } else {
                     playMorphSound('error');
-                    showToast(data.message || 'Gagal mendaftar');
+                    showToast(data.message || 'Gagal mendaftar.');
                 }
-            } catch (e) { showToast('Koneksi gagal'); }
+            } catch (err) {
+                playMorphSound('error');
+                showToast('Koneksi ke server gagal. Periksa akses Web App.');
+            } finally {
+                btn.disabled = false;
+                btn.innerText = 'Daftar Akun Baru';
+            }
         }
 
         async function handleUserLogin() {
             const username = document.getElementById('login-username').value.trim();
             const password = document.getElementById('login-password').value;
-            if (!username || !password) return showToast('Isi username dan password!');
+            if (!username || !password) {
+                playMorphSound('error');
+                return showToast('Isi username dan password.');
+            }
 
-            showToast('Memverifikasi akun...');
+            const btn = document.getElementById('btn-do-login-user');
+            btn.disabled = true;
+            btn.innerText = 'Memverifikasi...';
             try {
-                const res = await fetch(WEB_APP_URL, {
-                    method: 'POST',
-                    body: JSON.stringify({ action: 'loginUser', username, password })
-                });
-                const data = await res.json();
+                const data = await postAPI({ action: 'loginUser', username, password });
                 if (data.status === 'success') {
                     playMorphSound('success');
                     currentUser = data.user;
-                    localStorage.setItem('XIMART_SESSION_V2', JSON.stringify(currentUser));
+                    localStorage.setItem('XIMART_V3_SESSION', JSON.stringify(currentUser));
+                    updateSessionHeader();
                     showToast(`Selamat datang, ${currentUser.nama}!`);
-                    updateSessionUI();
+                    switchNav('beranda');
+                    renderAllViews();
                 } else {
                     playMorphSound('error');
-                    showToast(data.message || 'Login gagal');
+                    showToast(data.message || 'Username atau password salah.');
                 }
-            } catch (e) { showToast('Koneksi gagal'); }
+            } catch (err) {
+                playMorphSound('error');
+                showToast('Koneksi ke server gagal.');
+            } finally {
+                btn.disabled = false;
+                btn.innerText = 'Masuk Akun User';
+            }
         }
 
         async function handleOwnerLogin() {
             const password = document.getElementById('owner-pass-input').value;
-            if (!password) return showToast('Masukkan sandi Owner!');
+            const jalur = document.getElementById('owner-jalur-select').value;
+            if (!password) {
+                playMorphSound('error');
+                return showToast('Masukkan sandi Owner.');
+            }
 
-            showToast('Memverifikasi akses Owner...');
+            const btn = document.getElementById('btn-do-login-owner');
+            btn.disabled = true;
+            btn.innerText = 'Memverifikasi...';
             try {
-                const res = await fetch(WEB_APP_URL, {
-                    method: 'POST',
-                    body: JSON.stringify({ action: 'loginOwner', password })
-                });
-                const data = await res.json();
+                const data = await postAPI({ action: 'loginOwner', password, jalur });
                 if (data.status === 'success') {
                     playMorphSound('success');
                     currentUser = data.user;
-                    localStorage.setItem('XIMART_SESSION_V2', JSON.stringify(currentUser));
+                    localStorage.setItem('XIMART_V3_SESSION', JSON.stringify(currentUser));
                     document.getElementById('owner-pass-input').value = '';
-                    showToast('Mode Owner Aktif!');
-                    updateSessionUI();
-                    loadAppData(false);
+                    if (jalur === 'SARAPAN' || jalur === 'DAGANGAN') {
+                        activeJalur = jalur;
+                        localStorage.setItem('XIMART_V3_JALUR', jalur);
+                        syncJalurButtons();
+                    }
+                    updateSessionHeader();
+                    showToast('Login Owner berhasil!');
+                    switchNav('beranda');
+                    await loadAppData(false);
                 } else {
                     playMorphSound('error');
-                    showToast(data.message || 'Sandi Owner salah!');
+                    showToast(data.message || 'Sandi Owner salah.');
                 }
-            } catch (e) { showToast('Koneksi gagal'); }
+            } catch (err) {
+                playMorphSound('error');
+                showToast('Koneksi ke server gagal.');
+            } finally {
+                btn.disabled = false;
+                btn.innerText = 'Masuk Mode Owner';
+            }
         }
 
         async function handleAccountRecovery() {
             const username = document.getElementById('rec-username').value.trim();
             const wa = document.getElementById('rec-wa').value.trim();
             const newPassword = document.getElementById('rec-newpass').value;
-            if (!username || !wa || !newPassword) return showToast('Lengkapi semua kolom pemulihan!');
-
-            const res = await fetch(WEB_APP_URL, {
-                method: 'POST',
-                body: JSON.stringify({ action: 'recoverAccount', username, wa, newPassword })
-            });
-            const data = await res.json();
-            if (data.status === 'success') {
-                playMorphSound('success');
-                showToast('Password berhasil direset! Silakan login.');
-                setAuthMode('login');
-            } else {
+            if (!username || !wa || !newPassword) {
                 playMorphSound('error');
-                showToast(data.message);
+                return showToast('Lengkapi semua kolom.');
+            }
+            try {
+                const data = await postAPI({ action: 'recoverAccount', username, wa, newPassword });
+                if (data.status === 'success') {
+                    playMorphSound('success');
+                    showToast('Password berhasil direset. Silakan login.');
+                    setAuthMode('login');
+                } else {
+                    playMorphSound('error');
+                    showToast(data.message || 'Gagal mereset password.');
+                }
+            } catch (err) {
+                playMorphSound('error');
+                showToast('Koneksi gagal.');
             }
         }
 
@@ -1004,386 +1252,558 @@
             const nama = document.getElementById('prof-nama').value.trim();
             const wa = document.getElementById('prof-wa').value.trim();
             const newPassword = document.getElementById('prof-newpass').value;
-
-            const res = await fetch(WEB_APP_URL, {
-                method: 'POST',
-                body: JSON.stringify({ action: 'updateProfile', userId: currentUser.id, nama, wa, newPassword })
-            });
-            const data = await res.json();
-            if (data.status === 'success') {
-                playMorphSound('success');
-                currentUser.nama = data.nama;
-                currentUser.wa = data.wa;
-                localStorage.setItem('XIMART_SESSION_V2', JSON.stringify(currentUser));
-                showToast('Profil berhasil diperbarui!');
-                updateSessionUI();
+            try {
+                const data = await postAPI({
+                    action: 'updateProfile',
+                    userId: currentUser.id,
+                    nama,
+                    wa,
+                    newPassword
+                });
+                if (data.status === 'success') {
+                    playMorphSound('success');
+                    currentUser.nama = data.nama;
+                    currentUser.wa = data.wa;
+                    document.getElementById('prof-newpass').value = '';
+                    localStorage.setItem('XIMART_V3_SESSION', JSON.stringify(currentUser));
+                    updateSessionHeader();
+                    showToast('Profil diperbarui!');
+                } else {
+                    playMorphSound('error');
+                    showToast(data.message || 'Gagal menyimpan profil.');
+                }
+            } catch (err) {
+                playMorphSound('error');
+                showToast('Koneksi gagal.');
             }
         }
 
         function logoutAccount() {
             playMorphSound('tap');
             currentUser = null;
-            localStorage.removeItem('XIMART_SESSION_V2');
-            showToast('Berhasil keluar dari akun');
-            updateSessionUI();
+            localStorage.removeItem('XIMART_V3_SESSION');
+            updateSessionHeader();
+            showToast('Anda telah keluar.');
+            switchNav('beranda');
+            renderAllViews();
         }
 
-        // ==================== USER ORDERING & CUSTOM ORDER ====================
-        function filterMenuCategory(cat, btn) {
-            playMorphSound('tap');
-            selectedCategory = cat;
-            document.querySelectorAll('.cat-chip').forEach(c => c.classList.remove('active'));
-            btn.classList.add('active');
-            renderUserMenus();
+        function renderAllViews() {
+            renderUserCatalog();
+            renderDraftCart();
+            renderUserUnpaidOrders();
+            renderOwnerDashboard();
+            renderOwnerMenuManagement();
+            renderHistoryView();
         }
 
-        function renderUserMenus() {
-            const container = document.getElementById('user-menu-list');
-            container.innerHTML = '';
+        function renderUserCatalog() {
+            const grid = document.getElementById('user-catalog-grid');
+            const jalurMenus = appMenus.filter(m => m.jalur === activeJalur);
 
-            // Update dynamic category chips
-            const cats = ['Semua', ...new Set(appMenus.map(m => m.kategori))];
-            const tabsBox = document.getElementById('user-category-tabs');
-            tabsBox.innerHTML = cats.map(c => 
-                `<button class="cat-chip ${selectedCategory === c ? 'active' : ''}" onclick="filterMenuCategory('${c}', this)">${c}</button>`
-            ).join('');
-
-            const filtered = selectedCategory === 'Semua' ? appMenus : appMenus.filter(m => m.kategori === selectedCategory);
-
-            filtered.forEach(item => {
-                const div = document.createElement('div');
-                div.className = `menu-item-card ${item.qty > 0 ? 'selected' : ''} ${!item.tersedia ? 'unavailable' : ''}`;
-                div.innerHTML = `
-                    <div>
-                        <div style="font-size: 0.9rem; font-weight: 600;">${item.nama} ${!item.tersedia ? '<span style="color:var(--status-danger); font-size:0.7rem;">(Habis)</span>' : ''}</div>
-                        <div style="font-size: 0.76rem; color: var(--text-secondary);">Rp ${item.harga.toLocaleString('id-ID')} • ${item.kategori}</div>
-                    </div>
-                    <div class="qty-controls">
-                        <button class="qty-btn" ${!item.tersedia ? 'disabled' : ''} onclick="changeMenuQty('${item.id}', -1)">−</button>
-                        <span style="font-size: 0.85rem; font-weight: 700; min-width: 18px; text-align: center;">${item.qty}</span>
-                        <button class="qty-btn" ${!item.tersedia ? 'disabled' : ''} onclick="changeMenuQty('${item.id}', 1)">+</button>
-                    </div>
+            let html = jalurMenus.map(item => {
+                const hargaLabel = item.harga > 0
+                    ? `Rp ${item.harga.toLocaleString('id-ID')}`
+                    : 'Input nominal';
+                return `
+                    <button class="item-tile ${!item.tersedia ? 'unavailable' : ''}" onclick="openItemPopup('${item.id}')">
+                        <div style="font-weight: 700; font-size: 0.88rem;">${item.nama}</div>
+                        <div style="font-size: 0.72rem; color: ${item.tersedia ? 'var(--accent-neon)' : 'var(--status-danger)'};">
+                            ${item.tersedia ? hargaLabel : 'Habis'}
+                        </div>
+                    </button>
                 `;
-                container.appendChild(div);
-            });
+            }).join('');
 
-            calculateTotalOrder();
+            html += `
+                <button class="add-custom-tile" onclick="openCustomItemModal()">
+                    <span style="font-size: 1.25rem;">+</span>
+                    <span>Menu Tambahan</span>
+                </button>
+            `;
+
+            grid.innerHTML = html;
         }
 
-        function changeMenuQty(id, delta) {
+        function openItemPopup(menuId) {
             playMorphSound('tap');
-            const m = appMenus.find(x => x.id === id);
-            if (m && m.tersedia) {
-                m.qty = Math.max(0, (m.qty || 0) + delta);
-                renderUserMenus();
-            }
+            const item = appMenus.find(m => m.id === menuId);
+            if (!item) return;
+            document.getElementById('popup-item-id').value = item.id;
+            document.getElementById('popup-item-title').innerText = `Pembelian ${item.nama}`;
+            document.getElementById('popup-item-desc').value = '';
+            document.getElementById('popup-item-price').value = item.harga > 0 ? item.harga : '';
+            openModal('modal-item-popup');
         }
 
-        function addCustomOrderItem() {
-            const nameInput = document.getElementById('custom-order-name');
-            const priceInput = document.getElementById('custom-order-price');
-            const nama = nameInput.value.trim();
-            const harga = parseInt(priceInput.value);
+        function confirmItemPopup() {
+            const menuId = document.getElementById('popup-item-id').value;
+            const item = appMenus.find(m => m.id === menuId);
+            const desc = document.getElementById('popup-item-desc').value.trim();
+            const harga = Number(document.getElementById('popup-item-price').value);
+
+            if (!item || isNaN(harga) || harga <= 0) {
+                playMorphSound('error');
+                return showToast('Masukkan nominal harga yang valid.');
+            }
+
+            playMorphSound('success');
+            draftCart.push({
+                tempId: 'TMP-' + Date.now() + '-' + Math.floor(Math.random() * 1000),
+                nama: item.nama,
+                deskripsi: desc,
+                harga: harga,
+                jalur: activeJalur
+            });
+            closeModal('modal-item-popup');
+            renderDraftCart();
+            showToast(`${item.nama} masuk keranjang.`);
+        }
+
+        function openCustomItemModal() {
+            playMorphSound('tap');
+            document.getElementById('custom-modal-name').value = '';
+            document.getElementById('custom-modal-desc').value = '';
+            document.getElementById('custom-modal-price').value = '';
+            openModal('modal-custom-item');
+        }
+
+        function confirmCustomItemModal() {
+            const nama = document.getElementById('custom-modal-name').value.trim();
+            const desc = document.getElementById('custom-modal-desc').value.trim();
+            const harga = Number(document.getElementById('custom-modal-price').value);
 
             if (!nama || isNaN(harga) || harga <= 0) {
                 playMorphSound('error');
-                return showToast('Isi nama pesanan dan nominal harga yang valid!');
+                return showToast('Isi nama menu tambahan dan nominal harga.');
             }
 
-            playMorphSound('tap');
-            customCartItems.push({ id: 'CUST-' + Date.now(), nama: nama + ' (Custom)', harga: harga, qty: 1 });
-            nameInput.value = '';
-            priceInput.value = '';
-            renderCustomPreview();
-            calculateTotalOrder();
-            showToast('Pesanan tambahan masuk keranjang!');
+            playMorphSound('success');
+            draftCart.push({
+                tempId: 'TMP-' + Date.now() + '-' + Math.floor(Math.random() * 1000),
+                nama: nama,
+                deskripsi: desc,
+                harga: harga,
+                jalur: activeJalur
+            });
+            closeModal('modal-custom-item');
+            renderDraftCart();
+            showToast(`Menu tambahan "${nama}" masuk keranjang.`);
         }
 
-        function removeCustomItem(id) {
-            playMorphSound('tap');
-            customCartItems = customCartItems.filter(c => c.id !== id);
-            renderCustomPreview();
-            calculateTotalOrder();
-        }
+        function renderDraftCart() {
+            const itemsForJalur = draftCart.filter(d => d.jalur === activeJalur);
+            const container = document.getElementById('draft-cart-list');
+            document.getElementById('draft-count-badge').innerText = `${itemsForJalur.length} item`;
 
-        function renderCustomPreview() {
-            const box = document.getElementById('custom-items-preview');
-            box.innerHTML = customCartItems.map(c => `
-                <div style="display:flex; justify-content:space-between; align-items:center; background:rgba(0,0,0,0.25); padding:6px 10px; border-radius:8px; font-size:0.78rem;">
-                    <span>${c.nama} — Rp ${c.harga.toLocaleString('id-ID')}</span>
-                    <button style="background:none; border:none; color:var(--status-danger); font-weight:700; cursor:pointer;" onclick="removeCustomItem('${c.id}')">✕</button>
+            let total = 0;
+            itemsForJalur.forEach(d => total += d.harga);
+            document.getElementById('draft-total-price').innerText = `Rp ${total.toLocaleString('id-ID')}`;
+
+            if (itemsForJalur.length === 0) {
+                container.innerHTML = `<p style="font-size: 0.76rem; color: var(--text-secondary);">Keranjang jalur ini masih kosong.</p>`;
+                return;
+            }
+
+            container.innerHTML = itemsForJalur.map(d => `
+                <div class="sub-box" style="display: flex; justify-content: space-between; align-items: center; gap: 8px;">
+                    <div>
+                        <div style="font-weight: 700; font-size: 0.85rem;">${d.nama}</div>
+                        ${d.deskripsi ? `<div style="font-size: 0.72rem; color: var(--text-secondary);">Ket: ${d.deskripsi}</div>` : ''}
+                        <div style="font-size: 0.8rem; color: var(--accent-neon); font-weight: 700;">Rp ${d.harga.toLocaleString('id-ID')}</div>
+                    </div>
+                    <div style="display: flex; gap: 6px;">
+                        <button class="btn-secondary" onclick="editDraftPrice('${d.tempId}')" title="Edit Nominal">✏️</button>
+                        <button class="btn-secondary" style="color: var(--status-danger);" onclick="removeDraftItem('${d.tempId}')" title="Hapus">🗑️</button>
+                    </div>
                 </div>
             `).join('');
         }
 
-        function calculateTotalOrder() {
-            let total = 0;
-            let summaryLines = [];
-
-            appMenus.forEach(m => {
-                if (m.qty > 0) {
-                    total += m.harga * m.qty;
-                    summaryLines.push(`${m.nama} x${m.qty}`);
-                }
-            });
-            customCartItems.forEach(c => {
-                total += c.harga * c.qty;
-                summaryLines.push(`${c.nama} x${c.qty}`);
-            });
-
-            document.getElementById('user-total-price').innerText = `Rp ${total.toLocaleString('id-ID')}`;
-            document.getElementById('order-summary-list').innerText = summaryLines.length > 0 
-                ? 'Ringkasan: ' + summaryLines.join(', ') 
-                : 'Belum ada item yang dipilih.';
-            return { total, summaryLines };
+        function editDraftPrice(tempId) {
+            const target = draftCart.find(d => d.tempId === tempId);
+            if (!target) return;
+            const inputBaru = prompt(`Edit nominal untuk "${target.nama}" (Rp):`, target.harga);
+            if (inputBaru === null) return;
+            const nominalBaru = Number(inputBaru);
+            if (isNaN(nominalBaru) || nominalBaru <= 0) {
+                playMorphSound('error');
+                return showToast('Nominal tidak valid.');
+            }
+            playMorphSound('tap');
+            target.harga = nominalBaru;
+            renderDraftCart();
+            showToast('Nominal di keranjang diperbarui.');
         }
 
-        async function submitUserOrder() {
+        function removeDraftItem(tempId) {
+            playMorphSound('tap');
+            draftCart = draftCart.filter(d => d.tempId !== tempId);
+            renderDraftCart();
+        }
+
+        async function submitDraftOrders() {
+            const itemsToSend = draftCart.filter(d => d.jalur === activeJalur);
+            if (itemsToSend.length === 0) {
+                playMorphSound('error');
+                return showToast('Keranjang masih kosong.');
+            }
+
             const nama = currentUser ? currentUser.nama : document.getElementById('guest-name').value.trim();
             const wa = currentUser ? currentUser.wa : document.getElementById('guest-wa').value.trim();
-
-            if (!nama || !wa) {
+            if (!nama) {
                 playMorphSound('error');
-                return showToast('Isi Nama dan Nomor WhatsApp terlebih dahulu!');
+                return showToast('Isi nama pengaju terlebih dahulu.');
             }
 
-            const { total, summaryLines } = calculateTotalOrder();
-            if (total === 0) {
-                playMorphSound('error');
-                return showToast('Pilih minimal 1 menu atau isi pesanan tambahan!');
-            }
+            const btn = document.getElementById('btn-submit-orders');
+            btn.disabled = true;
+            btn.innerText = 'Mengirim...';
 
-            showToast('Mengirim pesanan ke Owner...');
             try {
-                const res = await fetch(WEB_APP_URL, {
-                    method: 'POST',
-                    body: JSON.stringify({
+                for (const item of itemsToSend) {
+                    await postAPI({
                         action: 'createOrder',
+                        userId: currentUser ? currentUser.id : 'GUEST',
                         nama: nama,
                         wa: wa,
-                        kategori: 'Sarapan',
-                        menu: summaryLines.join(', '),
-                        total: total
-                    })
-                });
-                const data = await res.json();
-                if (data.status === 'success') {
-                    playMorphSound('success');
-                    showToast('Pesanan berhasil terkirim ke Owner!');
-                    appMenus.forEach(m => m.qty = 0);
-                    customCartItems = [];
-                    renderCustomPreview();
-                    renderUserMenus();
-                    loadAppData(false);
+                        jalur: activeJalur,
+                        item: item.nama,
+                        deskripsi: item.deskripsi,
+                        total: item.harga
+                    });
                 }
-            } catch (e) { showToast('Gagal mengirim pesanan.'); }
+                playMorphSound('success');
+                draftCart = draftCart.filter(d => d.jalur !== activeJalur);
+                renderDraftCart();
+                showToast('Pengajuan terkirim & notifikasi WA dikirim ke Owner!');
+                await loadAppData(false);
+            } catch (err) {
+                playMorphSound('error');
+                showToast('Gagal mengirim pesanan.');
+            } finally {
+                btn.disabled = false;
+                btn.innerText = 'Kirim Pesanan & Notifikasi WA';
+            }
         }
 
-        // ==================== OWNER DASHBOARD & ACTIONS ====================
-        function renderOwnerDashboard() {
-            document.getElementById('owner-saldo-val').innerText = `Rp ${ownerSaldo.toLocaleString('id-ID')}`;
-            
-            let totalIn = 0, totalOut = 0;
-            financeLogs.forEach(l => {
-                if (l.tipe === 'PEMASUKAN') totalIn += l.nominal;
-                if (l.tipe === 'PENGELUARAN') totalOut += l.nominal;
-            });
-            document.getElementById('owner-in-val').innerText = `+Rp ${totalIn.toLocaleString('id-ID')}`;
-            document.getElementById('owner-out-val').innerText = `-Rp ${totalOut.toLocaleString('id-ID')}`;
+        function renderUserUnpaidOrders() {
+            const container = document.getElementById('user-unpaid-orders-list');
+            let list = allOrders.filter(o => o.jalur === activeJalur && o.status === 'BELUM DIBAYAR');
+            if (currentUser && currentUser.role === 'USER') {
+                list = list.filter(o =>
+                    (currentUser.id && o.userId === currentUser.id) ||
+                    o.nama.toLowerCase() === currentUser.nama.toLowerCase()
+                );
+            }
 
-            const activeOrders = allOrders.filter(o => o.status === 'PENDING' || o.status === 'DITERIMA');
-            const container = document.getElementById('owner-orders-list');
-            container.innerHTML = '';
-
-            if (activeOrders.length === 0) {
-                container.innerHTML = '<p style="font-size:0.8rem; color:var(--text-secondary);">Semua pesanan telah selesai diproses.</p>';
+            if (list.length === 0) {
+                container.innerHTML = `<p style="font-size: 0.76rem; color: var(--text-secondary);">Tidak ada pesanan berstatus Belum Dibayar pada jalur ini.</p>`;
                 return;
             }
 
-            activeOrders.forEach(ord => {
-                const div = document.createElement('div');
-                div.style.cssText = 'background:rgba(255,255,255,0.04); border:1px solid var(--glass-border); border-radius:12px; padding:14px; margin-bottom:10px;';
-                div.innerHTML = `
-                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
-                        <span style="font-weight:700; font-size:0.9rem;">👤 ${ord.nama}</span>
-                        <span class="status-pill status-${ord.status}">${ord.status}</span>
+            container.innerHTML = list.map(o => `
+                <div class="sub-box">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px;">
+                        <span style="font-weight: 700; font-size: 0.86rem;">${o.item}</span>
+                        <span class="status-pill status-BELUM DIBAYAR">BELUM DIBAYAR</span>
                     </div>
-                    <div style="font-size:0.8rem; color:var(--text-secondary); margin-bottom:8px;">
-                        📦 ${ord.menu}<br>
-                        <span style="color:var(--accent-neon); font-weight:700;">Rp ${ord.total.toLocaleString('id-ID')}</span> • <span style="font-size:0.7rem;">${ord.waktu}</span>
+                    ${o.deskripsi ? `<div style="font-size: 0.72rem; color: var(--text-secondary);">Deskripsi: ${o.deskripsi}</div>` : ''}
+                    <div style="font-size: 0.86rem; color: var(--accent-neon); font-weight: 700; margin: 4px 0 8px 0;">
+                        Rp ${o.total.toLocaleString('id-ID')}
                     </div>
-                    <div style="display:flex; gap:6px; flex-wrap:wrap;">
-                        ${ord.status === 'PENDING' ? `<button class="btn-secondary" style="flex:1;" onclick="ownerChangeOrderStatus(${ord.row}, 'DITERIMA')">👍 Terima</button>` : ''}
-                        <button class="btn-secondary" style="flex:1; background:var(--accent-neon-soft); color:var(--accent-neon); border-color:var(--glass-border-active);" onclick="ownerChangeOrderStatus(${ord.row}, 'SELESAI')">✅ Selesai & WA</button>
-                        <button class="btn-secondary" style="background:var(--status-danger-bg); color:var(--status-danger);" onclick="openKendalaModal(${ord.row}, 'SOLD')">⚠️ Sold</button>
+                    <div style="display: flex; gap: 8px;">
+                        <button class="btn-secondary" style="flex: 1;" onclick="openEditUnpaidModal(${o.row})">✏️ Edit Nominal</button>
+                        <button class="btn-secondary" style="color: var(--status-danger);" onclick="deleteUnpaidOrder(${o.row})">🗑️ Hapus</button>
                     </div>
-                `;
-                container.appendChild(div);
-            });
+                </div>
+            `).join('');
         }
 
-        async function ownerChangeOrderStatus(row, status, catatan = '') {
-            if (status === 'SELESAI' && !confirm('Tandai pesanan Selesai? Saldo dompet akan terpotong dan pesan WhatsApp otomatis dikirim ke pembeli.')) return;
-            showToast('Memproses status pesanan...');
+        function openEditUnpaidModal(row) {
+            const ord = allOrders.find(o => o.row === row);
+            if (!ord) return;
+            playMorphSound('tap');
+            document.getElementById('edit-unpaid-row').value = ord.row;
+            document.getElementById('edit-unpaid-info').innerText = `Item: ${ord.item} • Nominal saat ini: Rp ${ord.total.toLocaleString('id-ID')}`;
+            document.getElementById('edit-unpaid-desc').value = ord.deskripsi || '';
+            document.getElementById('edit-unpaid-nominal').value = ord.total;
+            openModal('modal-edit-unpaid');
+        }
+
+        async function submitEditUnpaidOrder() {
+            const row = Number(document.getElementById('edit-unpaid-row').value);
+            const newDeskripsi = document.getElementById('edit-unpaid-desc').value.trim();
+            const newNominal = Number(document.getElementById('edit-unpaid-nominal').value);
+
+            if (!newNominal || newNominal <= 0) {
+                playMorphSound('error');
+                return showToast('Nominal baru harus lebih dari 0.');
+            }
+
+            closeModal('modal-edit-unpaid');
+            showToast('Menyimpan nominal & mengirim WA pembaruan...');
             try {
-                const res = await fetch(WEB_APP_URL, {
-                    method: 'POST',
-                    body: JSON.stringify({ action: 'updateOrderStatus', row, status, catatan })
+                const res = await postAPI({
+                    action: 'editOrderNominal',
+                    row,
+                    newNominal,
+                    newDeskripsi
                 });
-                const data = await res.json();
-                if (data.status === 'success') {
+                if (res.status === 'success') {
                     playMorphSound('success');
-                    showToast(`Status diubah ke ${status} & WA terkirim!`);
-                    loadAppData(false);
+                    showToast('Nominal diperbarui & Owner menerima notif WA!');
+                    await loadAppData(false);
+                } else {
+                    playMorphSound('error');
+                    showToast(res.message || 'Gagal mengubah nominal.');
                 }
-            } catch (e) { showToast('Gagal memperbarui status'); }
-        }
-
-        function openKendalaModal(row, type) {
-            document.getElementById('kendala-row').value = row;
-            document.getElementById('kendala-type').value = type;
-            openModal('modal-kendala');
-        }
-
-        function confirmKendala() {
-            const row = document.getElementById('kendala-row').value;
-            const type = document.getElementById('kendala-type').value;
-            const note = document.getElementById('kendala-note').value;
-            closeModal('modal-kendala');
-            ownerChangeOrderStatus(row, type, note);
-        }
-
-        async function submitTopUp() {
-            const val = parseInt(document.getElementById('input-topup-val').value);
-            if (isNaN(val) || val <= 0) return showToast('Nominal tidak valid!');
-            const res = await fetch(WEB_APP_URL, {
-                method: 'POST',
-                body: JSON.stringify({ action: 'topUp', nominal: val })
-            });
-            const data = await res.json();
-            if (data.status === 'success') {
-                playMorphSound('success');
-                closeModal('modal-topup');
-                document.getElementById('input-topup-val').value = '';
-                showToast('Saldo berhasil ditambahkan!');
-                loadAppData(false);
+            } catch (err) {
+                playMorphSound('error');
+                showToast('Koneksi gagal.');
             }
         }
 
-        // ==================== OWNER MENU MANAGEMENT ====================
-        function renderOwnerManageMenus() {
-            const box = document.getElementById('owner-manage-menu-list');
-            box.innerHTML = appMenus.map(m => `
-                <div style="display:flex; justify-content:space-between; align-items:center; padding:10px; border-bottom:1px solid var(--glass-border);">
-                    <div>
-                        <div style="font-weight:600; font-size:0.88rem;">${m.nama}</div>
-                        <div style="font-size:0.75rem; color:var(--text-secondary);">Rp ${m.harga.toLocaleString('id-ID')} • ${m.tersedia ? '<span style="color:var(--accent-neon);">Tersedia</span>' : '<span style="color:var(--status-danger);">Habis</span>'}</div>
+        async function deleteUnpaidOrder(row) {
+            if (!confirm('Hapus pesanan ini? Notifikasi penghapusan akan dikirim ke Owner.')) return;
+            showToast('Menghapus pesanan...');
+            try {
+                const res = await postAPI({ action: 'deleteOrder', row });
+                if (res.status === 'success') {
+                    playMorphSound('tap');
+                    showToast('Pesanan dihapus & Owner diberitahu.');
+                    await loadAppData(false);
+                } else {
+                    playMorphSound('error');
+                    showToast(res.message || 'Gagal menghapus.');
+                }
+            } catch (err) {
+                playMorphSound('error');
+                showToast('Koneksi gagal.');
+            }
+        }
+
+        function renderOwnerDashboard() {
+            const isSarapan = activeJalur === 'SARAPAN';
+            const saldoAktif = isSarapan ? saldoSarapan : saldoQris;
+
+            document.getElementById('owner-wallet-title').innerText =
+                isSarapan ? 'Saldo Dompet Dana Sarapan' : 'Saldo Dompet Dana Dagangan (QRIS)';
+            document.getElementById('owner-jalur-badge').innerText =
+                isSarapan ? 'SARAPAN' : 'QRIS DAGANGAN';
+            document.getElementById('owner-saldo-display').innerText = `Rp ${saldoAktif.toLocaleString('id-ID')}`;
+            document.getElementById('add-fund-title').innerText =
+                isSarapan ? 'Tambah Saldo Dana Sarapan' : 'Tambah Kas Masuk Dana QRIS';
+
+            let totalIn = 0, totalOut = 0;
+            financeLogs.filter(l => l.jalur === activeJalur).forEach(l => {
+                if (l.tipe === 'PEMASUKAN') totalIn += Number(l.nominal) || 0;
+                if (l.tipe === 'PENGELUARAN') totalOut += Number(l.nominal) || 0;
+            });
+            document.getElementById('owner-in-display').innerText = `+Rp ${totalIn.toLocaleString('id-ID')}`;
+            document.getElementById('owner-out-display').innerText = `-Rp ${totalOut.toLocaleString('id-ID')}`;
+
+            const unpaidList = allOrders.filter(o => o.jalur === activeJalur && o.status === 'BELUM DIBAYAR');
+            const container = document.getElementById('owner-unpaid-list');
+
+            if (unpaidList.length === 0) {
+                container.innerHTML = `<p style="font-size: 0.78rem; color: var(--text-secondary);">Tidak ada pengajuan Belum Dibayar pada jalur ini.</p>`;
+                return;
+            }
+
+            container.innerHTML = unpaidList.map(o => `
+                <div class="sub-box">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px;">
+                        <span style="font-weight: 700; font-size: 0.88rem;">👤 ${o.nama}</span>
+                        <span class="status-pill status-BELUM DIBAYAR">BELUM DIBAYAR</span>
                     </div>
-                    <div style="display:flex; gap:6px;">
-                        <button class="btn-secondary" onclick="toggleMenuStock(${m.row}, ${!m.tersedia})">${m.tersedia ? 'Set Habis' : 'Set Ada'}</button>
-                        <button class="btn-secondary" onclick="openEditMenuModal(${m.row}, '${m.nama}', ${m.harga}, '${m.kategori}')">✏️</button>
-                        <button class="btn-secondary" style="color:var(--status-danger);" onclick="deleteMenu(${m.row})">🗑️</button>
+                    <div style="font-size: 0.82rem; margin-bottom: 2px;">🛒 <strong>${o.item}</strong></div>
+                    ${o.deskripsi ? `<div style="font-size: 0.73rem; color: var(--text-secondary); margin-bottom: 4px;">📝 Deskripsi: ${o.deskripsi}</div>` : ''}
+                    <div style="font-size: 0.94rem; color: var(--accent-neon); font-weight: 700; margin-bottom: 8px;">
+                        Rp ${o.total.toLocaleString('id-ID')} <span style="font-size: 0.68rem; color: var(--text-secondary); font-weight: 400;">• ${o.waktu}</span>
+                    </div>
+                    <div style="display: flex; gap: 8px;">
+                        <button class="btn-primary" style="flex: 1; padding: 9px 12px; font-size: 0.8rem;" onclick="decidePayment(${o.row}, 'DIBAYARKAN', '')">
+                            ✅ Dibayarkan
+                        </button>
+                        <button class="btn-secondary" style="flex: 1; background: var(--status-danger-bg); color: var(--status-danger); border-color: rgba(255,77,77,0.35); font-size: 0.8rem;" onclick="openRejectModal(${o.row})">
+                            ❌ Tidak Dibayarkan
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        async function decidePayment(row, decision, catatan) {
+            if (decision === 'DIBAYARKAN' && !confirm('Konfirmasi DIBAYARKAN? Saldo dompet akan terpotong dan notifikasi WA dikirim ke pengguna.')) {
+                return;
+            }
+            showToast('Memproses keputusan & mengirim WA...');
+            try {
+                const res = await postAPI({ action: 'decideOrderPayment', row, decision, catatan });
+                if (res.status === 'success') {
+                    playMorphSound('success');
+                    showToast(`Status: ${decision}. Notifikasi WA terkirim!`);
+                    await loadAppData(false);
+                } else {
+                    playMorphSound('error');
+                    showToast(res.message || 'Gagal memproses keputusan.');
+                }
+            } catch (err) {
+                playMorphSound('error');
+                showToast('Koneksi gagal.');
+            }
+        }
+
+        function openRejectModal(row) {
+            playMorphSound('tap');
+            document.getElementById('reject-order-row').value = row;
+            document.getElementById('reject-order-note').value = '';
+            openModal('modal-reject-order');
+        }
+
+        async function confirmRejectOrder() {
+            const row = Number(document.getElementById('reject-order-row').value);
+            const note = document.getElementById('reject-order-note').value.trim();
+            closeModal('modal-reject-order');
+            await decidePayment(row, 'TIDAK DIBAYARKAN', note);
+        }
+
+        async function submitAddFund() {
+            const nominal = Number(document.getElementById('input-fund-nominal').value);
+            const keterangan = document.getElementById('input-fund-ket').value.trim();
+            if (!nominal || nominal <= 0) {
+                playMorphSound('error');
+                return showToast('Masukkan nominal yang valid.');
+            }
+
+            closeModal('modal-add-fund');
+            showToast('Menambahkan saldo...');
+            try {
+                const res = await postAPI({
+                    action: 'addFund',
+                    jalur: activeJalur,
+                    nominal,
+                    keterangan
+                });
+                if (res.status === 'success') {
+                    playMorphSound('success');
+                    document.getElementById('input-fund-nominal').value = '';
+                    document.getElementById('input-fund-ket').value = '';
+                    showToast('Saldo dompet berhasil ditambah!');
+                    await loadAppData(false);
+                } else {
+                    playMorphSound('error');
+                    showToast(res.message || 'Gagal menambah saldo.');
+                }
+            } catch (err) {
+                playMorphSound('error');
+                showToast('Koneksi gagal.');
+            }
+        }
+
+        function renderOwnerMenuManagement() {
+            const box = document.getElementById('owner-menu-manage-list');
+            const list = appMenus.filter(m => m.jalur === activeJalur);
+            if (list.length === 0) {
+                box.innerHTML = `<p style="font-size: 0.76rem; color: var(--text-secondary);">Belum ada item pada jalur ini.</p>`;
+                return;
+            }
+            box.innerHTML = list.map(m => `
+                <div style="display: flex; justify-content: space-between; align-items: center; padding: 9px 0; border-bottom: 1px solid var(--glass-border);">
+                    <div>
+                        <div style="font-weight: 700; font-size: 0.86rem;">${m.nama}</div>
+                        <div style="font-size: 0.72rem; color: var(--text-secondary);">
+                            ${m.harga > 0 ? 'Rp ' + m.harga.toLocaleString('id-ID') : 'Nominal bebas'} •
+                            <span style="color: ${m.tersedia ? 'var(--accent-neon)' : 'var(--status-danger)'};">${m.tersedia ? 'Aktif' : 'Habis'}</span>
+                        </div>
+                    </div>
+                    <div style="display: flex; gap: 6px;">
+                        <button class="btn-secondary" onclick="toggleMenuItem(${m.row}, ${!m.tersedia})">${m.tersedia ? 'Nonaktif' : 'Aktifkan'}</button>
+                        <button class="btn-secondary" style="color: var(--status-danger);" onclick="deleteMenuItem(${m.row})">🗑️</button>
                     </div>
                 </div>
             `).join('');
         }
 
         async function ownerAddMenu() {
+            const jalur = document.getElementById('new-menu-jalur').value;
             const nama = document.getElementById('new-menu-name').value.trim();
-            const harga = parseInt(document.getElementById('new-menu-price').value);
-            const kategori = document.getElementById('new-menu-cat').value.trim() || 'Sarapan';
-            if (!nama || isNaN(harga) || harga <= 0) return showToast('Isi nama dan harga menu dengan benar!');
+            const harga = Number(document.getElementById('new-menu-price').value) || 0;
+            const kategori = document.getElementById('new-menu-cat').value.trim() || 'Umum';
 
-            showToast('Menambahkan menu...');
-            const res = await fetch(WEB_APP_URL, {
-                method: 'POST',
-                body: JSON.stringify({ action: 'manageMenu', subAction: 'add', nama, harga, kategori })
-            });
-            const data = await res.json();
-            if (data.status === 'success') {
-                playMorphSound('success');
-                document.getElementById('new-menu-name').value = '';
-                document.getElementById('new-menu-price').value = '';
-                showToast('Menu baru berhasil ditambahkan!');
-                loadAppData(false);
+            if (!nama) {
+                playMorphSound('error');
+                return showToast('Nama item wajib diisi.');
+            }
+
+            showToast('Menyimpan item...');
+            try {
+                const res = await postAPI({
+                    action: 'manageMenu',
+                    subAction: 'add',
+                    jalur,
+                    nama,
+                    harga,
+                    kategori
+                });
+                if (res.status === 'success') {
+                    playMorphSound('success');
+                    document.getElementById('new-menu-name').value = '';
+                    showToast('Item baru ditambahkan!');
+                    await loadAppData(false);
+                }
+            } catch (err) {
+                playMorphSound('error');
+                showToast('Koneksi gagal.');
             }
         }
 
-        async function toggleMenuStock(row, tersedia) {
-            const res = await fetch(WEB_APP_URL, {
-                method: 'POST',
-                body: JSON.stringify({ action: 'manageMenu', subAction: 'toggle', row, tersedia })
-            });
-            const data = await res.json();
-            if (data.status === 'success') {
-                playMorphSound('tap');
-                showToast('Status ketersediaan diperbarui!');
-                loadAppData(false);
-            }
+        async function toggleMenuItem(row, tersedia) {
+            try {
+                const res = await postAPI({ action: 'manageMenu', subAction: 'toggle', row, tersedia });
+                if (res.status === 'success') {
+                    playMorphSound('tap');
+                    await loadAppData(false);
+                }
+            } catch (err) { showToast('Koneksi gagal.'); }
         }
 
-        function openEditMenuModal(row, nama, harga, kategori) {
-            document.getElementById('edit-menu-row').value = row;
-            document.getElementById('edit-menu-name').value = nama;
-            document.getElementById('edit-menu-price').value = harga;
-            document.getElementById('edit-menu-cat').value = kategori;
-            openModal('modal-edit-menu');
+        async function deleteMenuItem(row) {
+            if (!confirm('Hapus item ini dari daftar?')) return;
+            try {
+                const res = await postAPI({ action: 'manageMenu', subAction: 'delete', row });
+                if (res.status === 'success') {
+                    playMorphSound('tap');
+                    await loadAppData(false);
+                }
+            } catch (err) { showToast('Koneksi gagal.'); }
         }
 
-        async function submitEditMenu() {
-            const row = document.getElementById('edit-menu-row').value;
-            const nama = document.getElementById('edit-menu-name').value.trim();
-            const harga = parseInt(document.getElementById('edit-menu-price').value);
-            const kategori = document.getElementById('edit-menu-cat').value.trim();
-            const menuObj = appMenus.find(m => m.row == row);
-
-            const res = await fetch(WEB_APP_URL, {
-                method: 'POST',
-                body: JSON.stringify({ action: 'manageMenu', subAction: 'edit', row, nama, harga, kategori, tersedia: menuObj ? menuObj.tersedia : true })
-            });
-            const data = await res.json();
-            if (data.status === 'success') {
-                playMorphSound('success');
-                closeModal('modal-edit-menu');
-                showToast('Menu berhasil diperbarui!');
-                loadAppData(false);
-            }
-        }
-
-        async function deleteMenu(row) {
-            if (!confirm('Hapus menu ini secara permanen?')) return;
-            const res = await fetch(WEB_APP_URL, {
-                method: 'POST',
-                body: JSON.stringify({ action: 'manageMenu', subAction: 'delete', row })
-            });
-            const data = await res.json();
-            if (data.status === 'success') {
-                playMorphSound('tap');
-                showToast('Menu dihapus!');
-                loadAppData(false);
-            }
-        }
-
-        // ==================== HISTORY & CHART VIEW ====================
         function renderHistoryView() {
             const isOwner = currentUser && currentUser.role === 'OWNER';
             document.getElementById('owner-chart-card').style.display = isOwner ? 'block' : 'none';
-            const container = document.getElementById('history-list-container');
+            document.getElementById('chart-title').innerText =
+                activeJalur === 'SARAPAN' ? '📊 Kas Dana Sarapan' : '📊 Kas Dana Dagangan (QRIS)';
 
-            let filteredOrders = allOrders;
+            let list = allOrders.filter(o => o.jalur === activeJalur);
             if (!isOwner && currentUser) {
-                filteredOrders = allOrders.filter(o => o.nama.toLowerCase() === currentUser.nama.toLowerCase() || o.wa === currentUser.wa);
+                list = list.filter(o =>
+                    (currentUser.id && o.userId === currentUser.id) ||
+                    o.nama.toLowerCase() === currentUser.nama.toLowerCase()
+                );
             }
 
-            if (filteredOrders.length === 0) {
-                container.innerHTML = '<p style="font-size:0.8rem; color:var(--text-secondary);">Belum ada riwayat pesanan tercatat.</p>';
+            const container = document.getElementById('history-orders-list');
+            if (list.length === 0) {
+                container.innerHTML = `<p style="font-size: 0.78rem; color: var(--text-secondary);">Belum ada riwayat pada jalur ini.</p>`;
             } else {
-                container.innerHTML = filteredOrders.slice().reverse().map(o => `
-                    <div style="padding:10px 0; border-bottom:1px solid var(--glass-border); display:flex; justify-content:space-between; align-items:center;">
+                container.innerHTML = list.slice().reverse().map(o => `
+                    <div style="padding: 10px 0; border-bottom: 1px solid var(--glass-border); display: flex; justify-content: space-between; align-items: center; gap: 8px;">
                         <div>
-                            <div style="font-weight:600; font-size:0.85rem;">${o.nama} — <span style="color:var(--accent-neon);">Rp ${o.total.toLocaleString('id-ID')}</span></div>
-                            <div style="font-size:0.74rem; color:var(--text-secondary);">${o.menu}</div>
-                            <div style="font-size:0.68rem; color:var(--text-secondary); opacity:0.7;">${o.waktu}</div>
+                            <div style="font-weight: 700; font-size: 0.84rem;">${o.nama} — <span style="color: var(--accent-neon);">Rp ${o.total.toLocaleString('id-ID')}</span></div>
+                            <div style="font-size: 0.75rem;">${o.item}${o.deskripsi ? ' (' + o.deskripsi + ')' : ''}</div>
+                            <div style="font-size: 0.68rem; color: var(--text-secondary);">${o.waktu}</div>
                         </div>
                         <span class="status-pill status-${o.status}">${o.status}</span>
                     </div>
@@ -1398,15 +1818,15 @@
             if (chartInstance) chartInstance.destroy();
 
             let totalIn = 0, totalOut = 0;
-            financeLogs.forEach(l => {
-                if (l.tipe === 'PEMASUKAN') totalIn += l.nominal;
-                if (l.tipe === 'PENGELUARAN') totalOut += l.nominal;
+            financeLogs.filter(l => l.jalur === activeJalur).forEach(l => {
+                if (l.tipe === 'PEMASUKAN') totalIn += Number(l.nominal) || 0;
+                if (l.tipe === 'PENGELUARAN') totalOut += Number(l.nominal) || 0;
             });
 
             chartInstance = new Chart(ctx, {
                 type: 'bar',
                 data: {
-                    labels: ['Pemasukan (Top Up)', 'Pengeluaran (Belanja)'],
+                    labels: ['Dana Masuk', 'Dana Keluar'],
                     datasets: [{
                         data: [totalIn, totalOut],
                         backgroundColor: ['#89E900', '#ff4d4d'],
@@ -1417,14 +1837,14 @@
                     responsive: true,
                     plugins: { legend: { display: false } },
                     scales: {
-                        y: { ticks: { color: '#A0A0A0' }, grid: { color: 'rgba(255,255,255,0.06)' } },
+                        y: { ticks: { color: '#A4A4A4' }, grid: { color: 'rgba(255,255,255,0.06)' } },
                         x: { ticks: { color: '#FDFDF2' }, grid: { display: false } }
                     }
                 }
             });
         }
 
-        function openModal(id) { playMorphSound('tap'); document.getElementById(id).classList.add('active'); }
+        function openModal(id) { document.getElementById(id).classList.add('active'); }
         function closeModal(id) { playMorphSound('tap'); document.getElementById(id).classList.remove('active'); }
     </script>
 </body>
